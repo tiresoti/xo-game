@@ -70,7 +70,7 @@ int main(int argc, char* argv[])
 
         // manage user input
         // -----------------
-        XO.ProcessInput(deltaTime);
+        XO.ProcessInput();
 
         // update game state
         // -----------------
@@ -112,7 +112,12 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
         double xpos, ypos;
         //getting cursor position
         glfwGetCursorPos(window, &xpos, &ypos);
-        std::cout << "Cursor Position at " << xpos << " : " << ypos << std::endl;
+        XO.isMouseClicked = true;
+        XO.CurrentMousePos = glm::vec2(xpos, ypos);
+    }
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
+    {
+        XO.isMouseClicked = false;
     }
 }
 

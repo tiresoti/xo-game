@@ -1,17 +1,21 @@
-#pragma once
-
-#include "game_object.h"
-#include "cell_object.h"
-
-class Checkboard : public GameObject
+#pragma once 
+  
+ #include "game_object.h" 
+ #include "cell_object.h"
+ #include <vector>
+  
+class CheckboardObject : public GameObject
 {
 public:
-	Checkboard(glm::vec2 pos, glm::vec2 size, Texture2D sprite); // init Cells[] here!
-	~Checkboard(); // delete Cells[] here!
-	Cell* Cells;
-	void onMouseClick(int xScreenPos, int yScreenPos);
+    CheckboardObject(); // TODO: define in header
+    CheckboardObject(glm::vec2 pos, glm::vec2 size, Texture2D boardsprite, Texture2D* emptycellsprite, Texture2D* xcellsprite, Texture2D* ocellsprite);
+    std::vector<std::vector<Cell>> Cells;
+    void onMouseClick(int xScreenPos, int yScreenPos);
+    void Draw(SpriteRenderer& renderer);
+    // void Clear();
 private:
-	Texture2D* EmptyTexture;
-	Texture2D* XCrossTexture;
-	Texture2D* ORingTexture;
+    Texture2D* EmptyCellSprite;
+    Texture2D* XCellSprite;
+    Texture2D* OCellSprite;
+    int GetBoardPart(int screenPos, float sidelength, float startposition);
 };

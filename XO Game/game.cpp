@@ -8,10 +8,12 @@
 ******************************************************************/
 #include "game.h"
 #include "game_object.h"
+#include "checkboard_object.h"
 #include "framework/resource_manager.h"
 #include "framework/sprite_renderer.h"
 #include <chrono>
 #include <thread>
+
 
 #define SLEEP std::this_thread::sleep_for(std::chrono::milliseconds(5))
 
@@ -22,7 +24,7 @@ SpriteRenderer* Renderer;
 const glm::vec2 CHECKBOARD_SIZE(400.0f, 400.0f);
 const glm::vec2 CELL_SIZE(100.0f, 100.0f);
 
-GameObject* Checkboard;
+CheckboardObject* Checkboard;
 GameObject* XCross;
 GameObject* ORing;
 
@@ -54,27 +56,21 @@ void Game::Init()
     ResourceManager::LoadTexture("res/textures/checkboard.png", true, "checkboard");
     ResourceManager::LoadTexture("res/textures/xcross.png", true, "xcross");
     ResourceManager::LoadTexture("res/textures/oring.png", true, "oring");
+    ResourceManager::LoadTexture("res/textures/placeholder.png", true, "placeholder");
+    // initializing input
+    isMouseClicked = false;
+    CurrentMousePos = glm::vec2(0, 0);
 
-    // create a list of
     // create checkboard
     glm::vec2 checkboardPos = glm::vec2(
         this->Width / 2.0f - CHECKBOARD_SIZE.x / 2.0f,
         this->Height / 2.0f - CHECKBOARD_SIZE.y / 2.0f
     );
-    Checkboard = new GameObject(checkboardPos, CHECKBOARD_SIZE, ResourceManager::GetTexture("checkboard"));
+    Checkboard = new CheckboardObject(checkboardPos, CHECKBOARD_SIZE, ResourceManager::GetTexture("checkboard"),
+        &ResourceManager::GetTexture("placeholder"),
+        &ResourceManager::GetTexture("xcross"),
+        &ResourceManager::GetTexture("oring"));
     
-    // temporary
-    glm::vec2 XCrossPos = glm::vec2(
-        this->Width / 3.0f - CELL_SIZE.x / 2.0f,
-        this->Height / 3.0f - CELL_SIZE.y / 2.0f
-    );
-    glm::vec2 ORingPos = glm::vec2(
-        this->Width / 6.0f - CELL_SIZE.x / 2.0f,
-        this->Height / 6.0f - CELL_SIZE.y / 2.0f
-    );
-    XCross = new GameObject(XCrossPos, CELL_SIZE, ResourceManager::GetTexture("xcross"));
-    ORing = new GameObject(ORingPos, CELL_SIZE, ResourceManager::GetTexture("oring"));
-    ORing->SetTexture(ResourceManager::GetTexture("xcross"));
 }
 
 
@@ -91,11 +87,19 @@ void Game::Update(float dt)
     //}
 }
 
-void Game::ProcessInput(float dt)
+void Game::ProcessInput()
 {
     if (this->State == GAME_ACTIVE)
     {
-        
+        if (!isMouseClicked) {} // mouse is usually not clicked
+        else                    // if clicked, do the bounds check
+            if (CurrentMousePos.x >= Checkboard->Position.x
+                && CurrentMousePos.x <= Checkboard->Position.x + Checkboard->Size.x
+                && CurrentMousePos.y >= Checkboard->Position.y
+                && CurrentMousePos.y <= Checkboard->Position.y + Checkboard->Size.y)
+            {
+                Checkboard->onMouseClick(CurrentMousePos.x, CurrentMousePos.y);
+            }
     }
 }
 
@@ -108,8 +112,6 @@ void Game::Render()
             glm::vec2(0.0f, 0.0f), glm::vec2(this->Width, this->Height), 0.0f
         );
         Checkboard->Draw(*Renderer);
-        XCross->Draw(*Renderer);
-        ORing->Draw(*Renderer);
     }
     SLEEP;
 }

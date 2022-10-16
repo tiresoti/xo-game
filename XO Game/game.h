@@ -10,6 +10,7 @@
 
 #include "glad/include/glad/glad.h"
 #include "glfw/include/GLFW/glfw3.h"
+#include "glm/glm.hpp"
 
 #include <vector>
 
@@ -37,13 +38,15 @@ public:
     // game state
     GameState               State;	
     unsigned int            Width, Height;
+    bool                    isMouseClicked;
+    glm::vec2               CurrentMousePos;
     // constructor/destructor
     Game(unsigned int width, unsigned int height);
     ~Game();
     // initialize game state (load all shaders/textures/levels)
     void Init();
     // game loop
-    void ProcessInput(float dt);
+    void ProcessInput();
     void Update(float dt);
     void Render();
     void DoCollisions();
