@@ -16,28 +16,19 @@
 
 // Represents the current state of the game
 enum GameState {
-    GAME_ACTIVE,
+    PLAYER_MOVE,
+    BOT_MOVE,
     GAME_MENU,
-    GAME_WIN
-};
-
-enum Direction {
-    UP,
-    RIGHT,
-    DOWN,
-    LEFT
+    GAME_OVER
 };
 
 
 // Game holds all game-related state and functionality.
-// Combines all game-related data into a single class for
-// easy access to each of the components and manageability.
 class Game
 {
 public:
     // game state
-    GameState               State;	
-    unsigned int            Width, Height;
+    GameState               State;
     bool                    isMouseClicked;
     glm::vec2               CurrentMousePos;
     // constructor/destructor
@@ -49,9 +40,12 @@ public:
     void ProcessInput();
     void Update(float dt);
     void Render();
-    void DoCollisions();
 private:
+    // initial size of the window
+    unsigned int Width, Height;
+    // initial size of the checkboard
+    glm::vec2 CHECKBOARD_SIZE;
     // reset
-    void ResetLevel();
-    void ResetPlayer();
+    void Restart();
+    void BotMove();
 };

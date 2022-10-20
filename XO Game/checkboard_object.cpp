@@ -4,14 +4,18 @@
 
 
 CheckboardObject::CheckboardObject()
-	: GameObject(), EmptyCellSprite(), XCellSprite(), OCellSprite() { }
+	: GameObject(), EmptyCellSprite(), XCellSprite(), OCellSprite(), isBoardChanged(false) { }
 
-CheckboardObject::CheckboardObject(glm::vec2 pos, glm::vec2 size, Texture2D boardsprite, Texture2D* emptycellsprite, Texture2D* xcellsprite, Texture2D* ocellsprite) : GameObject(pos, size, boardsprite), EmptyCellSprite(emptycellsprite), XCellSprite(xcellsprite), OCellSprite(ocellsprite)
+CheckboardObject::CheckboardObject(glm::vec2 pos, glm::vec2 size, Texture2D boardsprite,
+	Texture2D* emptycellsprite, Texture2D* xcellsprite, Texture2D* ocellsprite) :
+	GameObject(pos, size, boardsprite), EmptyCellSprite(emptycellsprite),
+	XCellSprite(xcellsprite), OCellSprite(ocellsprite), isBoardChanged(false)
 {
 	// calculate cell size based on Checkboard size
 	float cell_width  = this->Size.x / 3, cell_height  = this->Size.y / 3;
 	std::vector<Cell> row;
 
+	// fill the board with empty cells
 	for (int x = 0; x < 3; x++)
 	{
 		for (int y = 0; y < 3; y++)
@@ -27,11 +31,16 @@ CheckboardObject::CheckboardObject(glm::vec2 pos, glm::vec2 size, Texture2D boar
 }
 
 
+
 void CheckboardObject::onMouseClick(int xScreenPos, int yScreenPos)
 {
 	int column = GetBoardPart(xScreenPos, this->Size.x, this->Position.x);
 	int row = GetBoardPart(yScreenPos, this->Size.y, this->Position.y);
-	Cells[column][row].SetCellState(PLAYER, XCellSprite);
+	if (Cells[column][row].GetCellState() == EMPTY)
+	{
+		Cells[column][row].SetCellState(PLAYER, XCellSprite);
+		isBoardChanged = true;
+	}
 }
 
 int CheckboardObject::GetBoardPart(int screenPos, float sidelength, float startposition)
@@ -54,4 +63,53 @@ void CheckboardObject::Draw(SpriteRenderer& renderer)
 			if(cell.GetCellState() != EMPTY) // TODO: remove empty sprite
 			    cell.Draw(renderer);
 
+}
+
+// getter for isBoardChanged
+bool CheckboardObject::boardChanged()
+{
+	return isBoardChanged;
+}
+
+// setter for isBoardChanged
+void CheckboardObject::setBoardChanged(bool newstate)
+{
+	isBoardChanged = newstate;
+}
+
+// A macro for code readability
+#define BoardAt(column, row) Cells[column][row].GetCellState()
+
+// calculate if there is a 3-strike in a row and who owns it
+int CheckboardObject::GetWinner()
+{
+	for (int i = 0; i < 3; i++)
+	{
+		// if there is a vertical strike...
+		if (BoardAt(i, 0) == BoardAt(i, 1) && BoardAt(i, 0) == BoardAt(i, 2)
+			&& BoardAt(i, 0) != EMPTY)
+			return static_cast<int>(BoardAt(i, 0)); // ...return who made it
+
+		// check for a horizontal one
+		if (BoardAt(0, i) == BoardAt(1, i) && BoardAt(0, i) == BoardAt(2, i)
+			&& BoardAt(0, i) != EMPTY)
+			return static_cast<int>(BoardAt(0, i));
+	}
+
+	// check if there is a diagonal stike
+	if (BoardAt(0, 0) == BoardAt(1, 1) && BoardAt(0, 0) == BoardAt(2, 2)
+		|| BoardAt(0, 2) == BoardAt(1, 1) && BoardAt(0, 2) == BoardAt(2, 0))
+		return static_cast<int>(BoardAt(1, 1));
+
+	// if there are no strikes, return EMPTY
+	return static_cast<int>(EMPTY);
+}
+
+bool CheckboardObject::isEmptyCellsLeft()
+{
+	for (std::vector<Cell>& row : this->Cells)
+		for (Cell& cell : row)
+			if (cell.GetCellState() == EMPTY)
+				return true;
+	return false;
 }

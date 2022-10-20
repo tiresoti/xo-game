@@ -13,6 +13,8 @@
 #include "framework/sprite_renderer.h"
 #include <chrono>
 #include <thread>
+// debug
+#include <iostream>
 
 
 #define SLEEP std::this_thread::sleep_for(std::chrono::milliseconds(5))
@@ -20,9 +22,6 @@
 // A renderer object that is responsible for drawing sprites
 SpriteRenderer* Renderer;
 
-// Initial size of the player paddle
-const glm::vec2 CHECKBOARD_SIZE(400.0f, 400.0f);
-const glm::vec2 CELL_SIZE(100.0f, 100.0f);
 
 CheckboardObject* Checkboard;
 GameObject* XCross;
@@ -30,7 +29,7 @@ GameObject* ORing;
 
 
 Game::Game(unsigned int width, unsigned int height) 
-    : State(GAME_ACTIVE), Width(width), Height(height) { }
+    : State(PLAYER_MOVE), Width(width), Height(height) { }
 
 Game::~Game()
 {
@@ -57,11 +56,13 @@ void Game::Init()
     ResourceManager::LoadTexture("res/textures/xcross.png", true, "xcross");
     ResourceManager::LoadTexture("res/textures/oring.png", true, "oring");
     ResourceManager::LoadTexture("res/textures/placeholder.png", true, "placeholder");
+
     // initializing input
     isMouseClicked = false;
     CurrentMousePos = glm::vec2(0, 0);
 
     // create checkboard
+    CHECKBOARD_SIZE = glm::vec2(Width / 2, Width / 2);
     glm::vec2 checkboardPos = glm::vec2(
         this->Width / 2.0f - CHECKBOARD_SIZE.x / 2.0f,
         this->Height / 2.0f - CHECKBOARD_SIZE.y / 2.0f
@@ -77,19 +78,41 @@ void Game::Init()
 
 void Game::Update(float dt)
 {
-    //Ball->Move(dt, this->Width);
-    //// check for collisions
-    //this->DoCollisions();
-    //if (Ball->Position.y >= this->Height) // did ball reach bottom edge?
-    //{
-    //    this->ResetLevel();
-    //    this->ResetPlayer();
-    //}
+
+    if (Checkboard->boardChanged())
+    {
+        int result = Checkboard->GetWinner();
+        switch (result)
+        {
+        case 1:
+        {
+            std::cout << "You won!\n";
+            this->State = GAME_OVER;
+            break;
+        }
+        case -1:
+        {
+            std::cout << "You've lost!\n";
+            this->State = GAME_OVER;
+            break;
+        }
+        }
+
+        //if there are no free cells, quit (change state to GAME_OVER)
+        if (!Checkboard->isEmptyCellsLeft())
+        {
+            std::cout << "Draw!\n";
+            this->State = GAME_OVER;
+        }
+
+        Checkboard->setBoardChanged(false);
+
+    }
 }
 
 void Game::ProcessInput()
 {
-    if (this->State == GAME_ACTIVE)
+    if (this->State == PLAYER_MOVE)
     {
         if (!isMouseClicked) {} // mouse is usually not clicked
         else                    // if clicked, do the bounds check
@@ -101,33 +124,23 @@ void Game::ProcessInput()
                 Checkboard->onMouseClick(CurrentMousePos.x, CurrentMousePos.y);
             }
     }
+
 }
 
 void Game::Render()
 {
-    if (this->State == GAME_ACTIVE)
-    {
-        // draw background
-        Renderer->DrawSprite(ResourceManager::GetTexture("background"),
-            glm::vec2(0.0f, 0.0f), glm::vec2(this->Width, this->Height), 0.0f
-        );
-        Checkboard->Draw(*Renderer);
-    }
+    Renderer->DrawSprite(ResourceManager::GetTexture("background"),
+        glm::vec2(0.0f, 0.0f), glm::vec2(this->Width, this->Height), 0.0f
+    );
+    Checkboard->Draw(*Renderer);
+
     SLEEP;
 }
 
-
-void Game::DoCollisions()
-{
-
-}
-
-void Game::ResetLevel()
+void Game::Restart()
 {}
 
-void Game::ResetPlayer()
+void BotMove()
 {
-    // reset player/ball stats
-    //Checkboard->Size = CHECKBOARD_SIZE;
-    //Checkboard->Position = glm::vec2(this->Width / 2.0f - CHECKBOARD_SIZE.x / 2.0f, this->Height - CHECKBOARD_SIZE.y);
+
 }
