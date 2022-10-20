@@ -47,5 +47,6 @@ private:
     glm::vec2 CHECKBOARD_SIZE;
     // reset
     void Restart();
+    void CheckBoardChanges();
     void BotMove();
 };

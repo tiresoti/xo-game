@@ -71,10 +71,9 @@ bool CheckboardObject::boardChanged()
 	return isBoardChanged;
 }
 
-// setter for isBoardChanged
-void CheckboardObject::setBoardChanged(bool newstate)
+void CheckboardObject::onBoardCheckDone()
 {
-	isBoardChanged = newstate;
+	isBoardChanged = false;
 }
 
 // A macro for code readability
@@ -96,7 +95,7 @@ int CheckboardObject::GetWinner()
 			return static_cast<int>(BoardAt(0, i));
 	}
 
-	// check if there is a diagonal stike
+	// check if there is a diagonal strike
 	if (BoardAt(0, 0) == BoardAt(1, 1) && BoardAt(0, 0) == BoardAt(2, 2)
 		|| BoardAt(0, 2) == BoardAt(1, 1) && BoardAt(0, 2) == BoardAt(2, 0))
 		return static_cast<int>(BoardAt(1, 1));
@@ -112,4 +111,27 @@ bool CheckboardObject::isEmptyCellsLeft()
 			if (cell.GetCellState() == EMPTY)
 				return true;
 	return false;
+}
+
+void CheckboardObject::ChangeCellState(Cell& cell, CellState newcellstate)
+{
+	switch (newcellstate)
+	{
+	case BOT:
+		{
+		cell.SetCellState(BOT, OCellSprite);
+		break;
+		}
+	case PLAYER:
+	{
+		cell.SetCellState(PLAYER, XCellSprite);
+		break;
+	}
+	case EMPTY:
+	{
+		cell.SetCellState(BOT, EmptyCellSprite);
+		break;
+	}
+	}
+	isBoardChanged = true;
 }

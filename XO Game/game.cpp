@@ -1,11 +1,3 @@
-/*******************************************************************
-** This code is part of Breakout.
-**
-** Breakout is free software: you can redistribute it and/or modify
-** it under the terms of the CC BY 4.0 license as published by
-** Creative Commons, either version 4 of the License, or (at your
-** option) any later version.
-******************************************************************/
 #include "game.h"
 #include "game_object.h"
 #include "checkboard_object.h"
@@ -78,7 +70,44 @@ void Game::Init()
 
 void Game::Update(float dt)
 {
+    CheckBoardChanges();
+}
 
+void Game::ProcessInput()
+{
+    if (this->State == PLAYER_MOVE)
+    {
+        if (!isMouseClicked) {} // mouse is usually not clicked
+        else                    // if clicked, do the bounds check
+            if (CurrentMousePos.x >= Checkboard->Position.x
+                && CurrentMousePos.x <= Checkboard->Position.x + Checkboard->Size.x
+                && CurrentMousePos.y >= Checkboard->Position.y
+                && CurrentMousePos.y <= Checkboard->Position.y + Checkboard->Size.y)
+            {
+                Checkboard->onMouseClick(CurrentMousePos.x, CurrentMousePos.y);
+            }
+    }
+
+    if (this->State == BOT_MOVE)
+    {
+        BotMove();
+        //this->State = PLAYER_MOVE;
+    }
+}
+
+void Game::Render()
+{
+    Renderer->DrawSprite(ResourceManager::GetTexture("background"),
+        glm::vec2(0.0f, 0.0f), glm::vec2(this->Width, this->Height), 0.0f
+    );
+    Checkboard->Draw(*Renderer);
+
+    SLEEP;
+}
+
+
+void Game::CheckBoardChanges()
+{
     if (Checkboard->boardChanged())
     {
         int result = Checkboard->GetWinner();
@@ -105,62 +134,28 @@ void Game::Update(float dt)
             this->State = GAME_OVER;
         }
 
-        Checkboard->setBoardChanged(false);
+        Checkboard->onBoardCheckDone();
 
         // switch player/bot state
-        switch (this->State)
-        {
-        case PLAYER_MOVE:
-        {
+        if (this->State == PLAYER_MOVE)
             this->State = BOT_MOVE;
-            break;
-        }
-        case BOT_MOVE:
-        {
+        else if (this->State == BOT_MOVE)
             this->State = PLAYER_MOVE;
-            break;
-        }
-        }
     }
 }
 
-void Game::ProcessInput()
+
+void Game::BotMove()
 {
-    if (this->State == PLAYER_MOVE)
-    {
-        if (!isMouseClicked) {} // mouse is usually not clicked
-        else                    // if clicked, do the bounds check
-            if (CurrentMousePos.x >= Checkboard->Position.x
-                && CurrentMousePos.x <= Checkboard->Position.x + Checkboard->Size.x
-                && CurrentMousePos.y >= Checkboard->Position.y
-                && CurrentMousePos.y <= Checkboard->Position.y + Checkboard->Size.y)
+    std::cout << "Bot move\n";
+    for (std::vector<Cell>& row : Checkboard->Cells)
+        for (Cell& cell : row)
+            if (cell.GetCellState() == EMPTY)
             {
-                Checkboard->onMouseClick(CurrentMousePos.x, CurrentMousePos.y);
+                Checkboard->ChangeCellState(cell, BOT);
+                return;
             }
-    }
-
-    if (this->State == BOT_MOVE)
-    {
-        std::cout << "Bot move\n";
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
-        this->State = PLAYER_MOVE;
-    }
-}
-
-void Game::Render()
-{
-    Renderer->DrawSprite(ResourceManager::GetTexture("background"),
-        glm::vec2(0.0f, 0.0f), glm::vec2(this->Width, this->Height), 0.0f
-    );
-    Checkboard->Draw(*Renderer);
-
-    SLEEP;
 }
 
 void Game::Restart()
 {}
-
-void BotMove()
-{
-
-}
