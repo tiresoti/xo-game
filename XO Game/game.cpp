@@ -107,6 +107,20 @@ void Game::Update(float dt)
 
         Checkboard->setBoardChanged(false);
 
+        // switch player/bot state
+        switch (this->State)
+        {
+        case PLAYER_MOVE:
+        {
+            this->State = BOT_MOVE;
+            break;
+        }
+        case BOT_MOVE:
+        {
+            this->State = PLAYER_MOVE;
+            break;
+        }
+        }
     }
 }
 
@@ -125,6 +139,12 @@ void Game::ProcessInput()
             }
     }
 
+    if (this->State == BOT_MOVE)
+    {
+        std::cout << "Bot move\n";
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        this->State = PLAYER_MOVE;
+    }
 }
 
 void Game::Render()
