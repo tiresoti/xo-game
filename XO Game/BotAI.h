@@ -10,7 +10,6 @@ public:
 	void MakeMove();
 private:
 	CheckboardObject* Checkboard;
-	bool isInvincible;
 	bool isTwoCellsInARow();
 	bool isCentralCellFree();
 	bool isClosestFilled();

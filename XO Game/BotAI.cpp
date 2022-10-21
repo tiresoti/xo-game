@@ -2,7 +2,7 @@
 #include <random>
 #include <algorithm>
 
-BotAI::BotAI(CheckboardObject* checkboard) :  Checkboard(checkboard), isInvincible(false) { }
+BotAI::BotAI(CheckboardObject* checkboard) :  Checkboard(checkboard) { }
 
 
 void BotAI::MakeMove()
@@ -104,6 +104,7 @@ bool BotAI::isClosestFilled()
     // if there are none, return
     if (x < 0 || y < 0)
         return false;
+
     // then we get a random nearby cell from list of nearby cells
     std::vector <Cell*> nearestcells;
     if (BoardAt(std::clamp(x + 1, 0, 2), y) == 0)
