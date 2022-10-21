@@ -45,6 +45,9 @@
     <ClCompile Include="cell_object.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="BotAI.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\sprite.fs">
@@ -77,6 +80,9 @@
       <Filter>Исходные файлы</Filter>
     </ClInclude>
     <ClInclude Include="cell_object.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="BotAI.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>

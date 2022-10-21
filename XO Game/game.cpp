@@ -1,6 +1,7 @@
 #include "game.h"
 #include "game_object.h"
 #include "checkboard_object.h"
+#include "BotAI.h"
 #include "framework/resource_manager.h"
 #include "framework/sprite_renderer.h"
 #include <chrono>
@@ -14,10 +15,8 @@
 // A renderer object that is responsible for drawing sprites
 SpriteRenderer* Renderer;
 
-
 CheckboardObject* Checkboard;
-GameObject* XCross;
-GameObject* ORing;
+BotAI* Bot;
 
 
 Game::Game(unsigned int width, unsigned int height) 
@@ -27,8 +26,6 @@ Game::~Game()
 {
     delete Renderer;
     delete Checkboard;
-    delete XCross;
-    delete ORing;
 }
 
 void Game::Init()
@@ -63,7 +60,8 @@ void Game::Init()
         &ResourceManager::GetTexture("placeholder"),
         &ResourceManager::GetTexture("xcross"),
         &ResourceManager::GetTexture("oring"));
-    
+    // create bot
+    Bot = new BotAI(Checkboard);
 }
 
 
@@ -91,7 +89,6 @@ void Game::ProcessInput()
     if (this->State == BOT_MOVE)
     {
         BotMove();
-        //this->State = PLAYER_MOVE;
     }
 }
 
@@ -128,7 +125,7 @@ void Game::CheckBoardChanges()
         }
 
         //if there are no free cells, quit (change state to GAME_OVER)
-        if (!Checkboard->isEmptyCellsLeft())
+        if (!Checkboard->isEmptyCellsLeft() && this->State != GAME_OVER)
         {
             std::cout << "Draw!\n";
             this->State = GAME_OVER;
@@ -147,14 +144,7 @@ void Game::CheckBoardChanges()
 
 void Game::BotMove()
 {
-    std::cout << "Bot move\n";
-    for (std::vector<Cell>& row : Checkboard->Cells)
-        for (Cell& cell : row)
-            if (cell.GetCellState() == EMPTY)
-            {
-                Checkboard->ChangeCellState(cell, BOT);
-                return;
-            }
+    Bot->MakeMove();
 }
 
 void Game::Restart()

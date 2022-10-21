@@ -13,6 +13,7 @@ public:
     // input
     void onMouseClick(int xScreenPos, int yScreenPos);
     void ChangeCellState(Cell& cell, CellState newcellstate);
+    std::vector<Cell*> GetFreeCellsList();
     // game logic
     bool boardChanged();
     void onBoardCheckDone();
@@ -22,7 +23,7 @@ public:
     // void Clear();
 private:
     bool       isBoardChanged;
-    Texture2D* EmptyCellSprite; // TODO: remove it
+    Texture2D* EmptyCellSprite;
     Texture2D* XCellSprite;
     Texture2D* OCellSprite;
     int GetBoardPart(int screenPos, float sidelength, float startposition);

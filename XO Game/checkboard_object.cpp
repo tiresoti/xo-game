@@ -135,3 +135,13 @@ void CheckboardObject::ChangeCellState(Cell& cell, CellState newcellstate)
 	}
 	isBoardChanged = true;
 }
+
+std::vector<Cell*> CheckboardObject::GetFreeCellsList()
+{
+	std::vector<Cell*> freecells;
+	for (std::vector<Cell>& row : this->Cells)
+		for (Cell& cell : row)
+			if (cell.GetCellState() == EMPTY)
+				freecells.push_back(&cell);
+	return freecells;
+}
