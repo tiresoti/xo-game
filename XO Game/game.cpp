@@ -1,7 +1,5 @@
 #include "game.h"
-#include "game_object.h"
-#include "checkboard_object.h"
-#include "BotAI.h"
+
 #include "framework/resource_manager.h"
 #include "framework/sprite_renderer.h"
 #include <chrono>
@@ -45,6 +43,7 @@ void Game::Init()
     ResourceManager::LoadTexture("res/textures/checkboard.png", true, "checkboard");
     ResourceManager::LoadTexture("res/textures/xcross.png", true, "xcross");
     ResourceManager::LoadTexture("res/textures/oring.png", true, "oring");
+    //ResourceManager::LoadTexture("res/textures/placeholder.png", true, "placeholder");
     ResourceManager::LoadTexture("res/textures/transparentpixel.png", true, "transparentpixel");
 
     // initializing input
@@ -52,9 +51,9 @@ void Game::Init()
     CurrentMousePos = glm::vec2(0, 0);
 
     // create checkboard
-    CHECKBOARD_SIZE = glm::vec2(Width / 2, Width / 2);
+    CHECKBOARD_SIZE = glm::vec2(Width / 2.5f, Width / 2.5f);
     glm::vec2 checkboardPos = glm::vec2(
-        this->Width / 2.0f - CHECKBOARD_SIZE.x / 2.0f,
+        this->Width / 3.2f - CHECKBOARD_SIZE.x / 2.0f,
         this->Height / 2.0f - CHECKBOARD_SIZE.y / 2.0f
     );
     Checkboard = new CheckboardObject(checkboardPos, CHECKBOARD_SIZE, ResourceManager::GetTexture("checkboard"),
@@ -63,6 +62,8 @@ void Game::Init()
         &ResourceManager::GetTexture("oring"));
     // create bot
     Bot = new BotAI(Checkboard);
+    // create captures
+    // create buttons
 }
 
 
@@ -74,14 +75,16 @@ void Game::Update(float dt)
 
 void Game::ProcessInput()
 {
+    if (this->State == GAME_MENU)
+    {
+        //
+    }
+
     if (this->State == PLAYER_MOVE)
     {
         if (!isMouseClicked) {} // mouse is usually not clicked
         else                    // if clicked, do the bounds check
-            if (CurrentMousePos.x >= Checkboard->Position.x
-                && CurrentMousePos.x <= Checkboard->Position.x + Checkboard->Size.x
-                && CurrentMousePos.y >= Checkboard->Position.y
-                && CurrentMousePos.y <= Checkboard->Position.y + Checkboard->Size.y)
+            if (isMouseInsideGameObject(Checkboard))
             {
                 Checkboard->onMouseClick(CurrentMousePos.x, CurrentMousePos.y);
             }
@@ -91,6 +94,7 @@ void Game::ProcessInput()
     {
         BotMove();
     }
+
 }
 
 void Game::Render()
@@ -150,3 +154,12 @@ void Game::BotMove()
 
 void Game::Restart()
 {}
+
+bool Game::isMouseInsideGameObject(GameObject* gameobject)
+{
+    return (CurrentMousePos.x >= gameobject->Position.x
+        && CurrentMousePos.x <= gameobject->Position.x + gameobject->Size.x
+        && CurrentMousePos.y >= gameobject->Position.y
+        && CurrentMousePos.y <= gameobject->Position.y + gameobject->Size.y
+        );
+}

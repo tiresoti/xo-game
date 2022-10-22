@@ -1,5 +1,8 @@
 #pragma once
 
+#include "game_object.h"
+#include "checkboard_object.h"
+#include "BotAI.h"
 #include "glad/include/glad/glad.h"
 #include "glfw/include/GLFW/glfw3.h"
 #include "glm/glm.hpp"
@@ -37,8 +40,8 @@ private:
     unsigned int Width, Height;
     // initial size of the checkboard
     glm::vec2 CHECKBOARD_SIZE;
-    // reset
-    void Restart();
+    void Restart(); // TODO: game restart
     void CheckBoardChanges();
     void BotMove();
+    bool isMouseInsideGameObject(GameObject* gameobject);
 };

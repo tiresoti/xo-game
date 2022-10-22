@@ -14,7 +14,7 @@ void cursor_position_callback(GLFWwindow*, double xpos, double ypos);
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 
 // The Width of the screen
-const unsigned int SCREEN_WIDTH = 800;
+const unsigned int SCREEN_WIDTH = 900;
 // The height of the screen
 const unsigned int SCREEN_HEIGHT = 600;
 
@@ -112,7 +112,7 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
         double xpos, ypos;
         //getting cursor position
         glfwGetCursorPos(window, &xpos, &ypos);
-        XO.isMouseClicked = true; // add a method to unite these two lines
+        XO.isMouseClicked = true; // TODO: add a method to unite these two lines
         XO.CurrentMousePos = glm::vec2(xpos, ypos);
     }
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)

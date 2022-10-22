@@ -148,6 +148,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BotAI.cpp" />
+    <ClCompile Include="Button.cpp" />
     <ClCompile Include="cell_object.cpp" />
     <ClCompile Include="checkboard_object.cpp" />
     <ClCompile Include="framework\resource_manager.cpp" />
@@ -164,6 +165,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BotAI.h" />
+    <ClInclude Include="Button.h" />
     <ClInclude Include="cell_object.h" />
     <ClInclude Include="checkboard_object.h" />
     <ClInclude Include="framework\resource_manager.h" />
