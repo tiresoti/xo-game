@@ -15,6 +15,7 @@ public:
     glm::vec2   Position, Size;
     glm::vec3   Color;
     float       Rotation;
+    bool        isVisible;
     // render state
     Texture2D   Sprite;	
     // constructor(s)

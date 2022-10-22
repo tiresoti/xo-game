@@ -4,11 +4,12 @@
 
 
 CheckboardObject::CheckboardObject()
-	: GameObject(), EmptyCellSprite(), XCellSprite(), OCellSprite(), isBoardChanged(false) { }
+	: GameObject(), IMouseInteractive(), EmptyCellSprite(), XCellSprite(), OCellSprite(), isBoardChanged(false) { }
 
 CheckboardObject::CheckboardObject(glm::vec2 pos, glm::vec2 size, Texture2D boardsprite,
 	Texture2D* emptycellsprite, Texture2D* xcellsprite, Texture2D* ocellsprite) :
-	GameObject(pos, size, boardsprite), EmptyCellSprite(emptycellsprite),
+	GameObject(pos, size, boardsprite), IMouseInteractive(pos, size),
+	EmptyCellSprite(emptycellsprite),
 	XCellSprite(xcellsprite), OCellSprite(ocellsprite), isBoardChanged(false)
 {
 	// calculate cell size based on Checkboard size
@@ -31,23 +32,27 @@ CheckboardObject::CheckboardObject(glm::vec2 pos, glm::vec2 size, Texture2D boar
 }
 
 
-void CheckboardObject::onMouseClick(int xScreenPos, int yScreenPos)
+void CheckboardObject::onMouseClick(glm::vec2 MousePosition)
 {
-	int column = GetBoardPart(xScreenPos, this->Size.x, this->Position.x);
-	int row = GetBoardPart(yScreenPos, this->Size.y, this->Position.y);
-	if (Cells[column][row].GetCellState() == EMPTY)
+	if (isMouseOnInteractiveObject(MousePosition))
 	{
-		Cells[column][row].SetCellState(PLAYER, XCellSprite);
-		isBoardChanged = true;
+		int column = GetBoardPart(MousePosition.x, this->Size.x, this->Position.x);
+		int row = GetBoardPart(MousePosition.y, this->Size.y, this->Position.y);
+		if (Cells[column][row].GetCellState() == EMPTY)
+		{
+			Cells[column][row].SetCellState(PLAYER, XCellSprite);
+			isBoardChanged = true;
+		}
 	}
+
 }
 
-int CheckboardObject::GetBoardPart(int screenPos, float sidelength, float startposition)
+int CheckboardObject::GetBoardPart(float screenPos, float sidelength, float startposition)
 {
 	// calculates board part based on cursor position
-	if (static_cast<float>(screenPos) - startposition <= sidelength / 3)
+	if (screenPos - startposition <= sidelength / 3)
 		return 0; // the left or upper column/row
-	if (static_cast<float>(screenPos) - startposition <= 2 * sidelength / 3)
+	if (screenPos - startposition <= 2 * sidelength / 3)
 		return 1; // the middle column/row
 	return 2 ;// the right or lower column/row
 }

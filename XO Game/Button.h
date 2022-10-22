@@ -3,7 +3,10 @@
 
 class Button : public GameObject
 {
-	// extra fields: capture, 
-	// a sprite to show when pressed,
-	// 
+    Button(glm::vec2 pos, glm::vec2 size, Texture2D sprite);
+    bool isPressed;
+    void SetActiveState(bool activestate);
+    bool GetActiveState();
+private:
+    bool isActive;
 };

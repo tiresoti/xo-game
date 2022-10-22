@@ -12,19 +12,28 @@
 
 // A renderer object that is responsible for drawing sprites
 SpriteRenderer* Renderer;
-
+// Game objects
+std::map<std::string, GameScreen*> GameScreens;
+GameScreen* StartScreen;
+GameScreen* GameActiveScreen;
+GameScreen* GameOverScreen;
+GameScreen* CurrentGameScreen;
 CheckboardObject* Checkboard;
 BotAI* Bot;
 
 
 Game::Game(unsigned int width, unsigned int height) 
-    : State(PLAYER_MOVE), Width(width), Height(height) { }
+    : State(PLAYER_MOVE), Width(width), Height(height),
+    CHECKBOARD_SIZE(glm::vec2(1.0f, 1.0f)), isMouseClicked(false), CurrentMousePos(glm::vec2(0.0f, 0.0f)) { }
 
 Game::~Game()
 {
     delete Renderer;
     delete Checkboard;
     delete Bot;
+    delete StartScreen;
+    delete GameActiveScreen;
+    delete GameOverScreen;
 }
 
 void Game::Init()
@@ -64,6 +73,23 @@ void Game::Init()
     Bot = new BotAI(Checkboard);
     // create captures
     // create buttons
+    // create start screen
+    StartScreen = new GameScreen();
+    GameScreens.insert(std::pair("StartScreen", StartScreen));
+
+    // create main game screen
+    GameActiveScreen = new GameScreen();
+    GameActiveScreen->AddDrawable(Checkboard);
+    GameActiveScreen->AddInteractive(Checkboard);
+    GameScreens.insert(std::pair("GameActiveScreen", GameActiveScreen));
+
+    // create game over screen
+    GameOverScreen = new GameScreen();
+    GameScreens.insert(std::pair("GameOverScreen", GameOverScreen));
+
+    // set enter screen
+    CurrentGameScreen = GameScreens["StartScreen"];
+
 }
 
 
@@ -77,22 +103,40 @@ void Game::ProcessInput()
 {
     if (this->State == GAME_MENU)
     {
-        //
+        // if (!isMouseClicked) {} // mouse is usually not clicked
+        // else
+        // {
+        //     this->CurrentGameScreen->HandleInput();
+        // }
+
+        // if (StartButton->isPressed)
+        // {
+        //     // create method SwitchToGameScreen(std::string gamescreenname)
+        //     this->CurrentGameScreen->SetInactive();
+        //     this->CurrentGameScreen = GameScreens["GameActiveScreen"];
+        //     this->State == PLAYER_MOVE;
+        // }
     }
 
     if (this->State == PLAYER_MOVE)
     {
         if (!isMouseClicked) {} // mouse is usually not clicked
         else                    // if clicked, do the bounds check
-            if (isMouseInsideGameObject(Checkboard))
-            {
-                Checkboard->onMouseClick(CurrentMousePos.x, CurrentMousePos.y);
-            }
+            CurrentGameScreen->HandleInput(CurrentMousePos);
+            //if (isMouseInsideGameObject(Checkboard))
+            //{
+            //    Checkboard->onMouseClick(CurrentMousePos.x, CurrentMousePos.y);
+            //}
     }
 
     if (this->State == BOT_MOVE)
     {
         BotMove();
+    }
+
+    if (this->State == GAME_OVER)
+    {
+        
     }
 
 }
@@ -102,7 +146,7 @@ void Game::Render()
     Renderer->DrawSprite(ResourceManager::GetTexture("background"),
         glm::vec2(0.0f, 0.0f), glm::vec2(this->Width, this->Height), 0.0f
     );
-    Checkboard->Draw(*Renderer);
+    CurrentGameScreen->Draw(Renderer);
 
     SLEEP;
 }
@@ -117,13 +161,15 @@ void Game::CheckBoardChanges()
         {
         case 1:
         {
-            std::cout << "You won!\n";
+            std::cout << "You won!\n"; // set capture to win
+            // call method SwitchToGameScreen(std::string gamescreenname) instead
             this->State = GAME_OVER;
             break;
         }
         case -1:
         {
-            std::cout << "You've lost!\n";
+            std::cout << "You've lost!\n"; // set capture to lose
+            // call method SwitchToGameScreen(std::string gamescreenname) instead
             this->State = GAME_OVER;
             break;
         }
@@ -132,7 +178,8 @@ void Game::CheckBoardChanges()
         //if there are no free cells, quit (change state to GAME_OVER)
         if (!Checkboard->isEmptyCellsLeft() && this->State != GAME_OVER)
         {
-            std::cout << "Draw!\n";
+            std::cout << "Draw!\n"; // set capture to draw
+            // call method SwitchToGameScreen(std::string gamescreenname) instead
             this->State = GAME_OVER;
         }
 

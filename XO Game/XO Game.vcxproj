@@ -156,7 +156,9 @@
     <ClCompile Include="framework\sprite_renderer.cpp" />
     <ClCompile Include="framework\texture.cpp" />
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="GameScreen.cpp" />
     <ClCompile Include="game_object.cpp" />
+    <ClCompile Include="IMouseInteractive.cpp" />
     <ClCompile Include="program.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -173,7 +175,9 @@
     <ClInclude Include="framework\sprite_renderer.h" />
     <ClInclude Include="framework\texture.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="GameScreen.h" />
     <ClInclude Include="game_object.h" />
+    <ClInclude Include="IMouseInteractive.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

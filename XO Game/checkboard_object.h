@@ -1,17 +1,18 @@
 #pragma once 
   
- #include "game_object.h" 
- #include "cell_object.h"
- #include <vector>
+#include "game_object.h" 
+#include "cell_object.h"
+#include "IMouseInteractive.h"
+#include <vector>
   
-class CheckboardObject : public GameObject
+class CheckboardObject : public GameObject, public IMouseInteractive
 {
 public:
     CheckboardObject();
     CheckboardObject(glm::vec2 pos, glm::vec2 size, Texture2D boardsprite, Texture2D* emptycellsprite, Texture2D* xcellsprite, Texture2D* ocellsprite);
     std::vector<std::vector<Cell>> Cells;
     // input handling (from user or program)
-    void onMouseClick(int xScreenPos, int yScreenPos);
+    void onMouseClick(glm::vec2 MousePosition);
     void ChangeCellState(Cell& cell, CellState newcellstate);
     // game logic
     std::vector<Cell*> GetFreeCellsList();
@@ -26,5 +27,5 @@ private:
     Texture2D* EmptyCellSprite;
     Texture2D* XCellSprite;
     Texture2D* OCellSprite;
-    int GetBoardPart(int screenPos, float sidelength, float startposition);
+    int GetBoardPart(float screenPos, float sidelength, float startposition);
 };

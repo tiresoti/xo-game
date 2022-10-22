@@ -3,6 +3,7 @@
 #include "game_object.h"
 #include "checkboard_object.h"
 #include "BotAI.h"
+#include "GameScreen.h"
 #include "glad/include/glad/glad.h"
 #include "glfw/include/GLFW/glfw3.h"
 #include "glm/glm.hpp"
@@ -39,7 +40,7 @@ private:
     // initial size of the window
     unsigned int Width, Height;
     // initial size of the checkboard
-    glm::vec2 CHECKBOARD_SIZE;
+    glm::vec2 CHECKBOARD_SIZE; // TODO: rename to a variable
     void Restart(); // TODO: game restart
     void CheckBoardChanges();
     void BotMove();
