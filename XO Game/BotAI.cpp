@@ -27,6 +27,8 @@ bool BotAI::isTwoCellsInARow()
     // check columns for having two cells filled by player or bot
     for (int i = 0; i < 3; i++)
     {
+        // if there are 2 cells filled by player or bot in a row and one is empty,
+        // the sum of 3 cells is either 2 or -2. this hack is used here
         if (abs(BoardAt(i, 0) + BoardAt(i, 1) + BoardAt(i, 2)) == 2)
             for (int j = 0; j < 3; j++)
                 if (BoardAt(i, j) == 0)
@@ -105,7 +107,7 @@ bool BotAI::isClosestFilled()
     if (x < 0 || y < 0)
         return false;
 
-    // then we get a random nearby cell from list of nearby cells
+    // then we fill a random nearby cell from list of nearby cells
     std::vector <Cell*> nearestcells;
     if (BoardAt(std::clamp(x + 1, 0, 2), y) == 0)
         nearestcells.push_back(&Checkboard->Cells[std::clamp(x + 1, 0, 2)][y]);

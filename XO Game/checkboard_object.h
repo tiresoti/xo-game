@@ -10,11 +10,11 @@ public:
     CheckboardObject();
     CheckboardObject(glm::vec2 pos, glm::vec2 size, Texture2D boardsprite, Texture2D* emptycellsprite, Texture2D* xcellsprite, Texture2D* ocellsprite);
     std::vector<std::vector<Cell>> Cells;
-    // input
+    // input handling (from user or program)
     void onMouseClick(int xScreenPos, int yScreenPos);
     void ChangeCellState(Cell& cell, CellState newcellstate);
-    std::vector<Cell*> GetFreeCellsList();
     // game logic
+    std::vector<Cell*> GetFreeCellsList();
     bool boardChanged();
     void onBoardCheckDone();
     bool isEmptyCellsLeft();

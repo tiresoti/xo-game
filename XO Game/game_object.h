@@ -15,7 +15,6 @@ public:
     glm::vec2   Position, Size;
     glm::vec3   Color;
     float       Rotation;
-    bool        Destroyed;//TODO: убрать или задефолтить
     // render state
     Texture2D   Sprite;	
     // constructor(s)
@@ -23,5 +22,5 @@ public:
     GameObject(glm::vec2 pos, glm::vec2 size, Texture2D sprite, glm::vec3 color = glm::vec3(1.0f));
     // draw sprite
     virtual void Draw(SpriteRenderer &renderer);
-    void SetTexture(Texture2D newsprite); //TODO мб убрать в клетку
+    void SetTexture(Texture2D newsprite);
 };

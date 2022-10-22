@@ -31,7 +31,6 @@ CheckboardObject::CheckboardObject(glm::vec2 pos, glm::vec2 size, Texture2D boar
 }
 
 
-
 void CheckboardObject::onMouseClick(int xScreenPos, int yScreenPos)
 {
 	int column = GetBoardPart(xScreenPos, this->Size.x, this->Position.x);
@@ -60,7 +59,7 @@ void CheckboardObject::Draw(SpriteRenderer& renderer)
 	// draw cells
 	for (std::vector<Cell>& row : this->Cells)
 		for (Cell& cell : row)
-			if(cell.GetCellState() != EMPTY) // TODO: remove empty sprite
+			if(cell.GetCellState() != EMPTY)
 			    cell.Draw(renderer);
 
 }
@@ -129,7 +128,7 @@ void CheckboardObject::ChangeCellState(Cell& cell, CellState newcellstate)
 	}
 	case EMPTY:
 	{
-		cell.SetCellState(BOT, EmptyCellSprite);
+		cell.SetCellState(EMPTY, EmptyCellSprite);
 		break;
 	}
 	}

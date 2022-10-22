@@ -9,7 +9,7 @@
 // debug
 #include <iostream>
 
-
+// A little delay between frame to avoid CPU overloading
 #define SLEEP std::this_thread::sleep_for(std::chrono::milliseconds(5))
 
 // A renderer object that is responsible for drawing sprites
@@ -26,6 +26,7 @@ Game::~Game()
 {
     delete Renderer;
     delete Checkboard;
+    delete Bot;
 }
 
 void Game::Init()
@@ -44,7 +45,7 @@ void Game::Init()
     ResourceManager::LoadTexture("res/textures/checkboard.png", true, "checkboard");
     ResourceManager::LoadTexture("res/textures/xcross.png", true, "xcross");
     ResourceManager::LoadTexture("res/textures/oring.png", true, "oring");
-    ResourceManager::LoadTexture("res/textures/placeholder.png", true, "placeholder");
+    ResourceManager::LoadTexture("res/textures/transparentpixel.png", true, "transparentpixel");
 
     // initializing input
     isMouseClicked = false;
@@ -57,7 +58,7 @@ void Game::Init()
         this->Height / 2.0f - CHECKBOARD_SIZE.y / 2.0f
     );
     Checkboard = new CheckboardObject(checkboardPos, CHECKBOARD_SIZE, ResourceManager::GetTexture("checkboard"),
-        &ResourceManager::GetTexture("placeholder"),
+        &ResourceManager::GetTexture("transparentpixel"),
         &ResourceManager::GetTexture("xcross"),
         &ResourceManager::GetTexture("oring"));
     // create bot
