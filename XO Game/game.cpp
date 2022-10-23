@@ -20,11 +20,12 @@ GameScreen* GameOverScreen;
 GameScreen* CurrentGameScreen;
 CheckboardObject* Checkboard;
 BotAI* Bot;
+Button* StartButton;
 
 
 Game::Game(unsigned int width, unsigned int height) 
-    : State(PLAYER_MOVE), Width(width), Height(height),
-    CHECKBOARD_SIZE(glm::vec2(1.0f, 1.0f)), isMouseClicked(false), CurrentMousePos(glm::vec2(0.0f, 0.0f)) { }
+    : State(GAME_MENU), Width(width), Height(height),
+    CheckboardSize(glm::vec2(1.0f, 1.0f)), isMouseClicked(false), CurrentMousePos(glm::vec2(0.0f, 0.0f)) { }
 
 Game::~Game()
 {
@@ -34,6 +35,7 @@ Game::~Game()
     delete StartScreen;
     delete GameActiveScreen;
     delete GameOverScreen;
+    delete StartButton;
 }
 
 void Game::Init()
@@ -52,7 +54,7 @@ void Game::Init()
     ResourceManager::LoadTexture("res/textures/checkboard.png", true, "checkboard");
     ResourceManager::LoadTexture("res/textures/xcross.png", true, "xcross");
     ResourceManager::LoadTexture("res/textures/oring.png", true, "oring");
-    //ResourceManager::LoadTexture("res/textures/placeholder.png", true, "placeholder");
+    ResourceManager::LoadTexture("res/textures/placeholder.png", true, "placeholder");
     ResourceManager::LoadTexture("res/textures/transparentpixel.png", true, "transparentpixel");
 
     // initializing input
@@ -60,12 +62,12 @@ void Game::Init()
     CurrentMousePos = glm::vec2(0, 0);
 
     // create checkboard
-    CHECKBOARD_SIZE = glm::vec2(Width / 2.5f, Width / 2.5f);
+    CheckboardSize = glm::vec2(Width / 2.5f, Width / 2.5f);
     glm::vec2 checkboardPos = glm::vec2(
-        this->Width / 3.2f - CHECKBOARD_SIZE.x / 2.0f,
-        this->Height / 2.0f - CHECKBOARD_SIZE.y / 2.0f
+        this->Width / 3.2f - CheckboardSize.x / 2.0f,
+        this->Height / 2.0f - CheckboardSize.y / 2.0f
     );
-    Checkboard = new CheckboardObject(checkboardPos, CHECKBOARD_SIZE, ResourceManager::GetTexture("checkboard"),
+    Checkboard = new CheckboardObject(checkboardPos, CheckboardSize, ResourceManager::GetTexture("checkboard"),
         &ResourceManager::GetTexture("transparentpixel"),
         &ResourceManager::GetTexture("xcross"),
         &ResourceManager::GetTexture("oring"));
@@ -73,8 +75,14 @@ void Game::Init()
     Bot = new BotAI(Checkboard);
     // create captures
     // create buttons
+    glm::vec2 startbuttonsize(Width / 2, Height / 5);
+    glm::vec2 startbuttonpos(Width / 2 - startbuttonsize.x / 2, Height / 2 + startbuttonsize.y / 2);
+    StartButton = new Button(startbuttonpos, startbuttonsize, ResourceManager::GetTexture("placeholder"));
+    
     // create start screen
     StartScreen = new GameScreen();
+    StartScreen->AddDrawable(StartButton);
+    StartScreen->AddInteractive(StartButton);
     GameScreens.insert(std::pair("StartScreen", StartScreen));
 
     // create main game screen
@@ -89,44 +97,43 @@ void Game::Init()
 
     // set enter screen
     CurrentGameScreen = GameScreens["StartScreen"];
-
+    CurrentGameScreen->SetActiveState(true);
 }
 
 
 
 void Game::Update(float dt)
 {
-    CheckBoardChanges();
+    //if(this->State == PLAYER_MOVE || this->State == BOT_MOVE)
+        CheckBoardChanges();
 }
 
 void Game::ProcessInput()
 {
     if (this->State == GAME_MENU)
     {
-        // if (!isMouseClicked) {} // mouse is usually not clicked
-        // else
-        // {
-        //     this->CurrentGameScreen->HandleInput();
-        // }
+         if (!isMouseClicked) {} // mouse is usually not clicked
+         else
+         {
+             CurrentGameScreen->HandleInput(CurrentMousePos);
+         }
 
-        // if (StartButton->isPressed)
-        // {
-        //     // create method SwitchToGameScreen(std::string gamescreenname)
-        //     this->CurrentGameScreen->SetInactive();
-        //     this->CurrentGameScreen = GameScreens["GameActiveScreen"];
-        //     this->State == PLAYER_MOVE;
-        // }
+         if (StartButton->isPressed)
+         {
+             // TODO: create method SwitchToGameScreen(std::string gamescreenname)
+             StartButton->isPressed = false;
+             this->State = PLAYER_MOVE;
+             CurrentGameScreen->SetActiveState(false);
+             CurrentGameScreen = GameScreens["GameActiveScreen"];
+             CurrentGameScreen->SetActiveState(true);
+         }
     }
 
     if (this->State == PLAYER_MOVE)
     {
         if (!isMouseClicked) {} // mouse is usually not clicked
-        else                    // if clicked, do the bounds check
+        else                    // if clicked, handle input
             CurrentGameScreen->HandleInput(CurrentMousePos);
-            //if (isMouseInsideGameObject(Checkboard))
-            //{
-            //    Checkboard->onMouseClick(CurrentMousePos.x, CurrentMousePos.y);
-            //}
     }
 
     if (this->State == BOT_MOVE)

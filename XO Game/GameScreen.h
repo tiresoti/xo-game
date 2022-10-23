@@ -15,8 +15,7 @@ public:
     void AddInteractive(IMouseInteractive*);
     void Draw(SpriteRenderer* Renderer);
     void HandleInput(glm::vec2 MousePosition);
-    void SetActive();
-    void SetInactive();
+    void SetActiveState(bool activestate);
 private:
     std::vector<GameObject*> DrawableElements;
     std::vector <IMouseInteractive*> InteractiveElements;

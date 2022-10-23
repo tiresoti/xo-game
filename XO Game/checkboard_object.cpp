@@ -34,15 +34,12 @@ CheckboardObject::CheckboardObject(glm::vec2 pos, glm::vec2 size, Texture2D boar
 
 void CheckboardObject::onMouseClick(glm::vec2 MousePosition)
 {
-	if (isMouseOnInteractiveObject(MousePosition))
+	int column = GetBoardPart(MousePosition.x, this->Size.x, this->Position.x);
+	int row = GetBoardPart(MousePosition.y, this->Size.y, this->Position.y);
+	if (Cells[column][row].GetCellState() == EMPTY)
 	{
-		int column = GetBoardPart(MousePosition.x, this->Size.x, this->Position.x);
-		int row = GetBoardPart(MousePosition.y, this->Size.y, this->Position.y);
-		if (Cells[column][row].GetCellState() == EMPTY)
-		{
-			Cells[column][row].SetCellState(PLAYER, XCellSprite);
-			isBoardChanged = true;
-		}
+		Cells[column][row].SetCellState(PLAYER, XCellSprite);
+		isBoardChanged = true;
 	}
 
 }

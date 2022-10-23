@@ -1,13 +1,11 @@
 #include "Button.h"
 
 Button::Button(glm::vec2 pos, glm::vec2 size, Texture2D sprite) :
-	GameObject(pos, size, sprite), isActive(true), isPressed(false) { }
+	GameObject(pos, size, sprite),
+	IMouseInteractive(pos, size), isPressed(false) { }
 
-void Button::SetActiveState(bool activestate)
+
+void Button::onMouseClick(glm::vec2 MousePosition)
 {
-	isActive = activestate;
-}
-bool Button::GetActiveState()
-{
-	return isActive;
+	this->isPressed = true;
 }

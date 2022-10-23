@@ -10,5 +10,9 @@ public:
     glm::vec2 InteractiveSize;
     virtual void onMouseClick(glm::vec2 MousePosition);
     bool isMouseOnInteractiveObject(glm::vec2 MousePosition);
+    void SetActiveState(bool activestate);
+    bool GetActiveState();
+private:
+    bool isActive;
 };
 

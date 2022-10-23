@@ -1,12 +1,13 @@
 #pragma once
 #include "game_object.h"
+#include "IMouseInteractive.h"
 
-class Button : public GameObject
+#include <iostream>
+
+class Button : public GameObject, public IMouseInteractive
 {
+public:
     Button(glm::vec2 pos, glm::vec2 size, Texture2D sprite);
     bool isPressed;
-    void SetActiveState(bool activestate);
-    bool GetActiveState();
-private:
-    bool isActive;
+    void onMouseClick(glm::vec2 MousePosition);
 };

@@ -16,7 +16,8 @@ void GameScreen::Draw(SpriteRenderer* Renderer)
 	{
 		for (GameObject* gameobject : DrawableElements)
 		{
-			gameobject->Draw(*Renderer);
+			if(gameobject->isVisible)
+				gameobject->Draw(*Renderer);
 		}
 	}
 
@@ -27,22 +28,21 @@ void GameScreen::HandleInput(glm::vec2 MousePosition)
 	{
 		for (IMouseInteractive* interactiveelement : InteractiveElements)
 		{
-			interactiveelement->onMouseClick(MousePosition);
+			if(interactiveelement->GetActiveState()
+				&& interactiveelement->isMouseOnInteractiveObject(MousePosition))
+				interactiveelement->onMouseClick(MousePosition);
 		}
 	}
+}
 
-}
-void GameScreen::SetActive()
+void GameScreen::SetActiveState(bool newstate)
 {
-	for (GameObject* gameobject : DrawableElements)
+	for (IMouseInteractive* interactiveelement : InteractiveElements)
 	{
-		gameobject->isVisible = true; // TODO: remove if not needed
+		interactiveelement->SetActiveState(newstate);
 	}
-}
-void GameScreen::SetInactive()
-{
 	for (GameObject* gameobject : DrawableElements)
 	{
-		gameobject->isVisible = false; // TODO: remove if not needed
+		gameobject->isVisible = newstate; // TODO: remove if not needed
 	}
 }

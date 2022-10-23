@@ -1,11 +1,21 @@
 #include "IMouseInteractive.h"
 
-IMouseInteractive::IMouseInteractive() { }
+IMouseInteractive::IMouseInteractive() :
+	InteractivePosition(glm::vec2(0.0f, 0.0f)), InteractiveSize(glm::vec2(0.0f, 0.0f)), isActive(false) { }
 
 IMouseInteractive::IMouseInteractive(glm::vec2 pos, glm::vec2 size):
-	InteractivePosition(pos), InteractiveSize(size) { }
+	InteractivePosition(pos), InteractiveSize(size), isActive(false) { }
 
 void IMouseInteractive::onMouseClick(glm::vec2 MousePosition) { }
+
+void IMouseInteractive::SetActiveState(bool activestate)
+{
+	isActive = activestate;
+}
+bool IMouseInteractive::GetActiveState()
+{
+	return isActive;
+}
 
 bool IMouseInteractive::isMouseOnInteractiveObject(glm::vec2 MousePosition)
 {
