@@ -113,7 +113,7 @@ void Game::ProcessInput()
     if (this->State == GAME_MENU)
     {
          if (!isMouseClicked) {} // mouse is usually not clicked
-         else
+         else                    // if clicked, handle input
          {
              CurrentGameScreen->HandleInput(CurrentMousePos);
          }
@@ -131,8 +131,8 @@ void Game::ProcessInput()
 
     if (this->State == PLAYER_MOVE)
     {
-        if (!isMouseClicked) {} // mouse is usually not clicked
-        else                    // if clicked, handle input
+        if (!isMouseClicked) {}
+        else
             CurrentGameScreen->HandleInput(CurrentMousePos);
     }
 
