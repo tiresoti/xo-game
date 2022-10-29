@@ -1,7 +1,7 @@
 # GLFW binaries for 64-bit Windows
 
-NB: this folder was downloaded from https://www.glfw.org/download
-I excluded the docs folder from my repo. You can find it in the original folder, if needed.
+_NB: this folder was downloaded from https://www.glfw.org/download
+and I excluded the docs folder from my repo. You can find it by this link, if you need it._
 
 This archive contains headers, pre-compiled static libraries,
 import libraries and DLLs for GLFW 3.3.8.
