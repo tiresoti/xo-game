@@ -12,7 +12,7 @@ void GameObject::Draw(SpriteRenderer &renderer)
     renderer.DrawSprite(this->Sprite, this->Position, this->Size, this->Rotation, this->Color);
 }
 
-void GameObject::SetTexture(Texture2D newsprite)
+void GameObject::SetTexture(Texture2D &newsprite)
 {
     Sprite = newsprite;
 }

@@ -120,7 +120,7 @@ void CheckboardObject::ChangeCellState(Cell& cell, CellState newcellstate)
 	{
 	case BOT:
 		{
-		cell.SetCellState(BOT, OCellSprite);
+		cell.SetCellState(newcellstate, OCellSprite);
 		isBoardChanged = true;
 		break;
 		}
@@ -132,6 +132,7 @@ void CheckboardObject::ChangeCellState(Cell& cell, CellState newcellstate)
 	}
 	case EMPTY:
 	{
+		// when we set state to EMPTY, we don't want the game logic to check if game is over
 		cell.SetCellState(EMPTY, EmptyCellSprite);
 		break;
 	}

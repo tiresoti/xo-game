@@ -16,8 +16,7 @@ enum GameState {
     PLAYER_MOVE,
     BOT_MOVE,
     GAME_MENU,
-    GAME_OVER,
-    TRANSITION
+    GAME_OVER
 };
 
 
@@ -27,7 +26,6 @@ class Game
 public:
     // game state
     GameState               State;
-    GameState               NextState;
     bool                    isMouseClicked;
     glm::vec2               CurrentMousePos;
     // constructor/destructor

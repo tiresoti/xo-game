@@ -25,7 +25,7 @@ Button* RestartButton;
 
 
 Game::Game(unsigned int width, unsigned int height) 
-    : State(GAME_MENU), NextState(GAME_MENU), Width(width), Height(height),
+    : State(GAME_MENU), Width(width), Height(height),
     CheckboardSize(glm::vec2(1.0f, 1.0f)), isMouseClicked(false), CurrentMousePos(glm::vec2(0.0f, 0.0f)) { }
 
 Game::~Game()
@@ -73,17 +73,20 @@ void Game::Init()
         &ResourceManager::GetTexture("transparentpixel"),
         &ResourceManager::GetTexture("xcross"),
         &ResourceManager::GetTexture("oring"));
+
     // create bot
     Bot = new BotAI(Checkboard);
+
     // create captures
+    
     // create buttons
     glm::vec2 startbuttonsize(Width / 2, Height / 5);
     glm::vec2 startbuttonpos(Width / 2 - startbuttonsize.x / 2, Height / 2 + startbuttonsize.y / 2);
-    StartButton = new Button(startbuttonpos, startbuttonsize, ResourceManager::GetTexture("placeholder"));
+    StartButton = new Button(startbuttonpos, startbuttonsize, ResourceManager::GetTexture("placeholder"), ResourceManager::GetTexture("xcross"));
     
     glm::vec2 restartbuttonsize(Width / 3, Height / 6);
     glm::vec2 restartbuttonpos(Width / 2 + startbuttonsize.x / 4, Height / 2 + startbuttonsize.y / 2);
-    RestartButton = new Button(restartbuttonpos, restartbuttonsize, ResourceManager::GetTexture("placeholder"));
+    RestartButton = new Button(restartbuttonpos, restartbuttonsize, ResourceManager::GetTexture("placeholder"), ResourceManager::GetTexture("xcross"));
     
     // create start screen
     StartScreen = new GameScreen();
@@ -129,18 +132,13 @@ void Game::ProcessInput()
 
          if (StartButton->isPressed)
          {
-             StartButton->isPressed = false;
-             SwitchToGameScreen(PLAYER_MOVE, "GameActiveScreen");
+             // wait until mouse is released
+             if (!isMouseClicked)
+             {
+                 StartButton->isPressed = false;
+                 SwitchToGameScreen(PLAYER_MOVE, "GameActiveScreen");
+             }
          }
-    }
-
-    if (this->State == TRANSITION)
-    {
-        // next state is set only when mouse is released
-        if (!isMouseClicked)
-        {
-            this->State = NextState;
-        }
     }
 
     if (this->State == PLAYER_MOVE)
@@ -162,11 +160,14 @@ void Game::ProcessInput()
             CurrentGameScreen->HandleInput(CurrentMousePos);
         if (RestartButton->isPressed)
         {
-            RestartButton->isPressed = false;
-            RestartGame();
+            // wait until mouse is released
+            if (!isMouseClicked)
+            {
+                RestartButton->isPressed = false;
+                RestartGame();
+            }
         }
     }
-
 }
 
 void Game::Render()
@@ -212,11 +213,9 @@ void Game::RestartGame()
 }
 
 
-// all game screen transitions must go through this to avoid handling input from unreleased mouse
 void Game::SwitchToGameScreen(GameState newstate, std::string newgamescreenname)
 {
-    this->State = TRANSITION;
-    this->NextState = newstate;
+    this->State = newstate;
     CurrentGameScreen->SetActiveState(false);
     if (GameScreens[newgamescreenname])
         CurrentGameScreen = GameScreens[newgamescreenname];
