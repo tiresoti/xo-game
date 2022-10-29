@@ -10,8 +10,11 @@
 // A little delay between frame to avoid CPU overloading
 #define SLEEP std::this_thread::sleep_for(std::chrono::milliseconds(5))
 
-// A renderer object that is responsible for drawing sprites
+// Renderer objects that is responsible for drawing sprites and text
 SpriteRenderer* Renderer;
+TextRenderer* Text;
+TextRenderer* BigText;
+
 // Game objects
 std::map<std::string, GameScreen*> GameScreens;
 GameScreen* StartScreen;
@@ -22,11 +25,15 @@ CheckboardObject* Checkboard;
 BotAI* Bot;
 Button* StartButton;
 Button* RestartButton;
+TextCaption* YouVsComputerText;
+TextCaption* CurrentCountText;
+TextCaption* ResultText;
 
 
 Game::Game(unsigned int width, unsigned int height) 
     : State(GAME_MENU), Width(width), Height(height),
-    CheckboardSize(glm::vec2(1.0f, 1.0f)), isMouseClicked(false), CurrentMousePos(glm::vec2(0.0f, 0.0f)) { }
+    CheckboardSize(glm::vec2(1.0f, 1.0f)), isMouseClicked(false), CurrentMousePos(glm::vec2(0.0f, 0.0f)),
+    Victories(0), Defeats(0) { }
 
 Game::~Game()
 {
@@ -38,19 +45,26 @@ Game::~Game()
     delete GameOverScreen;
     delete StartButton;
     delete RestartButton;
+    delete Text;
+    delete CurrentCountText;
 }
 
 void Game::Init()
 {
     // load shaders
     ResourceManager::LoadShader("res/shaders/sprite.vs", "res/shaders/sprite.fs", nullptr, "sprite");
+    ResourceManager::LoadShader("res/shaders/text_2d.vs", "res/shaders/text_2d.fs", nullptr, "text");
     // configure shaders
     glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(this->Width),
         static_cast<float>(this->Height), 0.0f, -1.0f, 1.0f);
     ResourceManager::GetShader("sprite").Use().SetInteger("image", 0);
     ResourceManager::GetShader("sprite").SetMatrix4("projection", projection);
-    // set render-specific controls
+    // create renderers
     Renderer = new SpriteRenderer(ResourceManager::GetShader("sprite"));
+    Text = new TextRenderer(this->Width, this->Height, ResourceManager::GetShader("text"));
+    Text->Load("res/fonts/ocraext.TTF", 30);
+    BigText = new TextRenderer(this->Width, this->Height, ResourceManager::GetShader("text"));
+    BigText->Load("res/fonts/ocraext.TTF", 56);
     // load textures
     ResourceManager::LoadTexture("res/textures/background.jpg", false, "background");
     ResourceManager::LoadTexture("res/textures/checkboard.png", true, "checkboard");
@@ -76,8 +90,6 @@ void Game::Init()
 
     // create bot
     Bot = new BotAI(Checkboard);
-
-    // create captures
     
     // create buttons
     glm::vec2 startbuttonsize(Width / 2, Height / 5);
@@ -85,9 +97,15 @@ void Game::Init()
     StartButton = new Button(startbuttonpos, startbuttonsize, ResourceManager::GetTexture("placeholder"), ResourceManager::GetTexture("xcross"));
     
     glm::vec2 restartbuttonsize(Width / 3, Height / 6);
-    glm::vec2 restartbuttonpos(Width / 2 + startbuttonsize.x / 4, Height / 2 + startbuttonsize.y / 2);
+    glm::vec2 restartbuttonpos(Width / 2 + restartbuttonsize.x / 4, checkboardPos.y + CheckboardSize.y - restartbuttonsize.y);
     RestartButton = new Button(restartbuttonpos, restartbuttonsize, ResourceManager::GetTexture("placeholder"), ResourceManager::GetTexture("xcross"));
     
+    // create captions
+    YouVsComputerText = new TextCaption("You vs Computer", restartbuttonpos.x + restartbuttonsize.x / 2, checkboardPos.y, 1.0f, Text);
+    CurrentCountText = new TextCaption("0 : 0", restartbuttonpos.x + restartbuttonsize.x / 2, checkboardPos.y + 50.0f, 1.0f, Text);
+    ResultText = new TextCaption("RESULT", restartbuttonpos.x + restartbuttonsize.x / 2, (checkboardPos.y + restartbuttonpos.y + restartbuttonsize.y)/ 2.0f, 1.0f,
+        BigText, glm::vec3(0.0f, 0.0f, 0.0f));
+
     // create start screen
     StartScreen = new GameScreen();
     StartScreen->AddDrawable(StartButton);
@@ -98,6 +116,8 @@ void Game::Init()
     GameActiveScreen = new GameScreen();
     GameActiveScreen->AddDrawable(Checkboard);
     GameActiveScreen->AddInteractive(Checkboard);
+    GameActiveScreen->AddCaption(YouVsComputerText);
+    GameActiveScreen->AddCaption(CurrentCountText);
     GameScreens.insert(std::pair("GameActiveScreen", GameActiveScreen));
 
     // create game over screen
@@ -105,6 +125,9 @@ void Game::Init()
     GameOverScreen->AddDrawable(Checkboard);
     GameOverScreen->AddDrawable(RestartButton);
     GameOverScreen->AddInteractive(RestartButton);
+    GameOverScreen->AddCaption(YouVsComputerText);
+    GameOverScreen->AddCaption(CurrentCountText);
+    GameOverScreen->AddCaption(ResultText);
     GameScreens.insert(std::pair("GameOverScreen", GameOverScreen));
 
     // set enter screen
@@ -176,7 +199,6 @@ void Game::Render()
         glm::vec2(0.0f, 0.0f), glm::vec2(this->Width, this->Height), 0.0f
     );
     CurrentGameScreen->Draw(Renderer);
-
     SLEEP;
 }
 
@@ -229,19 +251,24 @@ void Game::FinishGameWithResult(CellState winner)
     {
     case PLAYER:
     {
-        std::cout << "You won!\n"; // set capture to win
-            // update win\lose stats
+        // set capture to win
+        ResultText->SetCaption("YOU WIN!");
+        // update win\lose stats
+        Victories += 1;
         break;
     }
     case BOT:
     {
-        std::cout << "You've lost!\n";
+        // set capture to lose
+        ResultText->SetCaption("YOU LOST");
+        Defeats += 1;
         break;
     }
     case EMPTY:
     {
-        std::cout << "Draw!\n";
+        ResultText->SetCaption("DRAW");
     }
     }
+    CurrentCountText->SetCaption(std::to_string(Victories) + " : " + std::to_string(Defeats));
     SwitchToGameScreen(GAME_OVER, "GameOverScreen");
 }

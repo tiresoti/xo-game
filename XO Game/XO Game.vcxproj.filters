@@ -16,6 +16,9 @@
     <Filter Include="Исходные файлы\Framework">
       <UniqueIdentifier>{6f7b8bf7-ae78-4987-9162-fd676160972a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Исходные файлы\freetype srcs">
+      <UniqueIdentifier>{cbd2e17c-f692-4a15-9608-46dfadfc1f06}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="program.cpp">
@@ -57,12 +60,24 @@
     <ClCompile Include="GameScreen.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="text_renderer.cpp">
+      <Filter>Исходные файлы\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="text_caption.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\sprite.fs">
       <Filter>Файлы ресурсов</Filter>
     </None>
     <None Include="res\shaders\sprite.vs">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="res\shaders\text_2d.fs">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="res\shaders\text_2d.vs">
       <Filter>Файлы ресурсов</Filter>
     </None>
   </ItemGroup>
@@ -101,6 +116,12 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="game_object.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="text_renderer.h">
+      <Filter>Исходные файлы\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="text_caption.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

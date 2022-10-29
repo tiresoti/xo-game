@@ -12,6 +12,10 @@ void GameScreen::AddInteractive(IMouseInteractive* InteractiveElement)
 	InteractiveElements.push_back(InteractiveElement);
 }
 
+void GameScreen::AddCaption(TextCaption* TextCaptionElement)
+{
+	TextElements.push_back(TextCaptionElement);
+}
 
 void GameScreen::Draw(SpriteRenderer* Renderer)
 {
@@ -22,6 +26,12 @@ void GameScreen::Draw(SpriteRenderer* Renderer)
 			if(gameobject->isVisible)
 				gameobject->Draw(*Renderer);
 		}
+	}
+
+	if (TextElements.size() > 0)
+	{
+		for (TextCaption* textcaption : TextElements)
+			textcaption->DrawText();
 	}
 
 }

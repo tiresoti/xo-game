@@ -3,6 +3,7 @@
 #include "glm/glm.hpp"
 #include "game_object.h"
 #include "IMouseInteractive.h"
+#include "text_caption.h"
 #include <vector>
 
 #include <iostream>
@@ -13,11 +14,13 @@ public:
     GameScreen();
     void AddDrawable(GameObject*);
     void AddInteractive(IMouseInteractive*);
+    void AddCaption(TextCaption*);
     void Draw(SpriteRenderer* Renderer);
     void HandleInput(glm::vec2 MousePosition);
     void SetActiveState(bool activestate);
 private:
-    std::vector<GameObject*> DrawableElements;
+    std::vector <GameObject*>        DrawableElements;
     std::vector <IMouseInteractive*> InteractiveElements;
+    std::vector <TextCaption*>       TextElements;
 };
 

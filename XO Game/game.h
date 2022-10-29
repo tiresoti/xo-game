@@ -5,6 +5,8 @@
 #include "BotAI.h"
 #include "GameScreen.h"
 #include "Button.h"
+#include "text_renderer.h"
+#include "text_caption.h"
 #include "glad/include/glad/glad.h"
 #include "glfw/include/GLFW/glfw3.h"
 #include "glm/glm.hpp"
@@ -42,6 +44,8 @@ private:
     unsigned int Width, Height;
     // initial size of the checkboard
     glm::vec2 CheckboardSize;
+    // win/lose count
+    unsigned int Victories, Defeats;
     void RestartGame(); // TODO: game restart
     void CheckBoardChanges();
     void SwitchToGameScreen(GameState newstate, std::string gamescreenname);
