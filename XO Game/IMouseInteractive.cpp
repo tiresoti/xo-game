@@ -12,6 +12,7 @@ void IMouseInteractive::SetActiveState(bool activestate)
 {
 	isActive = activestate;
 }
+
 bool IMouseInteractive::GetActiveState()
 {
 	return isActive;

@@ -21,10 +21,11 @@ GameScreen* CurrentGameScreen;
 CheckboardObject* Checkboard;
 BotAI* Bot;
 Button* StartButton;
+Button* RestartButton;
 
 
 Game::Game(unsigned int width, unsigned int height) 
-    : State(GAME_MENU), Width(width), Height(height),
+    : State(GAME_MENU), NextState(GAME_MENU), Width(width), Height(height),
     CheckboardSize(glm::vec2(1.0f, 1.0f)), isMouseClicked(false), CurrentMousePos(glm::vec2(0.0f, 0.0f)) { }
 
 Game::~Game()
@@ -36,6 +37,7 @@ Game::~Game()
     delete GameActiveScreen;
     delete GameOverScreen;
     delete StartButton;
+    delete RestartButton;
 }
 
 void Game::Init()
@@ -79,6 +81,10 @@ void Game::Init()
     glm::vec2 startbuttonpos(Width / 2 - startbuttonsize.x / 2, Height / 2 + startbuttonsize.y / 2);
     StartButton = new Button(startbuttonpos, startbuttonsize, ResourceManager::GetTexture("placeholder"));
     
+    glm::vec2 restartbuttonsize(Width / 3, Height / 6);
+    glm::vec2 restartbuttonpos(Width / 2 + startbuttonsize.x / 4, Height / 2 + startbuttonsize.y / 2);
+    RestartButton = new Button(restartbuttonpos, restartbuttonsize, ResourceManager::GetTexture("placeholder"));
+    
     // create start screen
     StartScreen = new GameScreen();
     StartScreen->AddDrawable(StartButton);
@@ -93,6 +99,9 @@ void Game::Init()
 
     // create game over screen
     GameOverScreen = new GameScreen();
+    GameOverScreen->AddDrawable(Checkboard);
+    GameOverScreen->AddDrawable(RestartButton);
+    GameOverScreen->AddInteractive(RestartButton);
     GameScreens.insert(std::pair("GameOverScreen", GameOverScreen));
 
     // set enter screen
@@ -104,7 +113,7 @@ void Game::Init()
 
 void Game::Update(float dt)
 {
-    //if(this->State == PLAYER_MOVE || this->State == BOT_MOVE)
+    if(this->State == PLAYER_MOVE || this->State == BOT_MOVE)
         CheckBoardChanges();
 }
 
@@ -120,13 +129,18 @@ void Game::ProcessInput()
 
          if (StartButton->isPressed)
          {
-             // TODO: create method SwitchToGameScreen(std::string gamescreenname)
              StartButton->isPressed = false;
-             this->State = PLAYER_MOVE;
-             CurrentGameScreen->SetActiveState(false);
-             CurrentGameScreen = GameScreens["GameActiveScreen"];
-             CurrentGameScreen->SetActiveState(true);
+             SwitchToGameScreen(PLAYER_MOVE, "GameActiveScreen");
          }
+    }
+
+    if (this->State == TRANSITION)
+    {
+        // next state is set only when mouse is released
+        if (!isMouseClicked)
+        {
+            this->State = NextState;
+        }
     }
 
     if (this->State == PLAYER_MOVE)
@@ -138,12 +152,19 @@ void Game::ProcessInput()
 
     if (this->State == BOT_MOVE)
     {
-        BotMove();
+        Bot->MakeMove(); // input is blocked here
     }
 
     if (this->State == GAME_OVER)
     {
-        
+        if (!isMouseClicked) {}
+        else
+            CurrentGameScreen->HandleInput(CurrentMousePos);
+        if (RestartButton->isPressed)
+        {
+            RestartButton->isPressed = false;
+            RestartGame();
+        }
     }
 
 }
@@ -163,31 +184,14 @@ void Game::CheckBoardChanges()
 {
     if (Checkboard->boardChanged())
     {
-        int result = Checkboard->GetWinner();
-        switch (result)
-        {
-        case 1:
-        {
-            std::cout << "You won!\n"; // set capture to win
-            // call method SwitchToGameScreen(std::string gamescreenname) instead
-            this->State = GAME_OVER;
-            break;
-        }
-        case -1:
-        {
-            std::cout << "You've lost!\n"; // set capture to lose
-            // call method SwitchToGameScreen(std::string gamescreenname) instead
-            this->State = GAME_OVER;
-            break;
-        }
-        }
-
+        CellState result = Checkboard->GetWinner();
+        if (result != EMPTY)
+            FinishGameWithResult(result);
+        
         //if there are no free cells, quit (change state to GAME_OVER)
         if (!Checkboard->isEmptyCellsLeft() && this->State != GAME_OVER)
         {
-            std::cout << "Draw!\n"; // set capture to draw
-            // call method SwitchToGameScreen(std::string gamescreenname) instead
-            this->State = GAME_OVER;
+            FinishGameWithResult(EMPTY);
         }
 
         Checkboard->onBoardCheckDone();
@@ -201,19 +205,44 @@ void Game::CheckBoardChanges()
 }
 
 
-void Game::BotMove()
+void Game::RestartGame()
 {
-    Bot->MakeMove();
+    Checkboard->Clear();
+    SwitchToGameScreen(PLAYER_MOVE, "GameActiveScreen");
 }
 
-void Game::Restart()
-{}
 
-bool Game::isMouseInsideGameObject(GameObject* gameobject)
+// all game screen transitions must go through this to avoid handling input from unreleased mouse
+void Game::SwitchToGameScreen(GameState newstate, std::string newgamescreenname)
 {
-    return (CurrentMousePos.x >= gameobject->Position.x
-        && CurrentMousePos.x <= gameobject->Position.x + gameobject->Size.x
-        && CurrentMousePos.y >= gameobject->Position.y
-        && CurrentMousePos.y <= gameobject->Position.y + gameobject->Size.y
-        );
+    this->State = TRANSITION;
+    this->NextState = newstate;
+    CurrentGameScreen->SetActiveState(false);
+    if (GameScreens[newgamescreenname])
+        CurrentGameScreen = GameScreens[newgamescreenname];
+    else std::cout << "Couldn't load game screen " << newgamescreenname << ", doesn't exist\n";
+    CurrentGameScreen->SetActiveState(true);
+}
+
+void Game::FinishGameWithResult(CellState winner)
+{
+    switch (winner)
+    {
+    case PLAYER:
+    {
+        std::cout << "You won!\n"; // set capture to win
+            // update win\lose stats
+        break;
+    }
+    case BOT:
+    {
+        std::cout << "You've lost!\n";
+        break;
+    }
+    case EMPTY:
+    {
+        std::cout << "Draw!\n";
+    }
+    }
+    SwitchToGameScreen(GAME_OVER, "GameOverScreen");
 }

@@ -16,7 +16,8 @@ enum GameState {
     PLAYER_MOVE,
     BOT_MOVE,
     GAME_MENU,
-    GAME_OVER
+    GAME_OVER,
+    TRANSITION
 };
 
 
@@ -26,6 +27,7 @@ class Game
 public:
     // game state
     GameState               State;
+    GameState               NextState;
     bool                    isMouseClicked;
     glm::vec2               CurrentMousePos;
     // constructor/destructor
@@ -42,8 +44,8 @@ private:
     unsigned int Width, Height;
     // initial size of the checkboard
     glm::vec2 CheckboardSize;
-    void Restart(); // TODO: game restart
+    void RestartGame(); // TODO: game restart
     void CheckBoardChanges();
-    void BotMove();
-    bool isMouseInsideGameObject(GameObject* gameobject);
+    void SwitchToGameScreen(GameState newstate, std::string gamescreenname);
+    void FinishGameWithResult(CellState winner);
 };

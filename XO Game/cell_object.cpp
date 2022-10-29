@@ -9,7 +9,9 @@ CellState Cell::GetCellState()
 
 void Cell::SetCellState(CellState newcellstate, Texture2D* newtexture)
 {
-	if (this->Cellstate == EMPTY)
+	// we can change state only if it's empty during the game (this->Cellstate == EMPTY)
+	// or if we want to clear it (newcellstate == EMPTY)
+	if (this->Cellstate == EMPTY || newcellstate == EMPTY)
 	{
 		this->Cellstate = newcellstate;
 		this->SetTexture(*newtexture);

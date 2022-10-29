@@ -81,28 +81,28 @@ void CheckboardObject::onBoardCheckDone()
 #define BoardAt(column, row) Cells[column][row].GetCellState()
 
 // calculate if there is a 3-strike in a row and who owns it
-int CheckboardObject::GetWinner()
+CellState CheckboardObject::GetWinner()
 {
 	for (int i = 0; i < 3; i++)
 	{
 		// if there is a vertical strike...
 		if (BoardAt(i, 0) == BoardAt(i, 1) && BoardAt(i, 0) == BoardAt(i, 2)
 			&& BoardAt(i, 0) != EMPTY)
-			return static_cast<int>(BoardAt(i, 0)); // ...return who made it
+			return BoardAt(i, 0); // ...return who made it
 
 		// check for a horizontal one
 		if (BoardAt(0, i) == BoardAt(1, i) && BoardAt(0, i) == BoardAt(2, i)
 			&& BoardAt(0, i) != EMPTY)
-			return static_cast<int>(BoardAt(0, i));
+			return BoardAt(0, i);
 	}
 
 	// check if there is a diagonal strike
 	if (BoardAt(0, 0) == BoardAt(1, 1) && BoardAt(0, 0) == BoardAt(2, 2)
 		|| BoardAt(0, 2) == BoardAt(1, 1) && BoardAt(0, 2) == BoardAt(2, 0))
-		return static_cast<int>(BoardAt(1, 1));
+		return BoardAt(1, 1);
 
 	// if there are no strikes, return EMPTY
-	return static_cast<int>(EMPTY);
+	return EMPTY;
 }
 
 bool CheckboardObject::isEmptyCellsLeft()
@@ -121,11 +121,13 @@ void CheckboardObject::ChangeCellState(Cell& cell, CellState newcellstate)
 	case BOT:
 		{
 		cell.SetCellState(BOT, OCellSprite);
+		isBoardChanged = true;
 		break;
 		}
 	case PLAYER:
 	{
 		cell.SetCellState(PLAYER, XCellSprite);
+		isBoardChanged = true;
 		break;
 	}
 	case EMPTY:
@@ -134,7 +136,6 @@ void CheckboardObject::ChangeCellState(Cell& cell, CellState newcellstate)
 		break;
 	}
 	}
-	isBoardChanged = true;
 }
 
 std::vector<Cell*> CheckboardObject::GetFreeCellsList()
@@ -145,4 +146,11 @@ std::vector<Cell*> CheckboardObject::GetFreeCellsList()
 			if (cell.GetCellState() == EMPTY)
 				freecells.push_back(&cell);
 	return freecells;
+}
+
+void CheckboardObject::Clear()
+{
+	for (std::vector<Cell>& row : this->Cells)
+		for (Cell& cell : row)
+			ChangeCellState(cell, EMPTY);
 }

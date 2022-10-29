@@ -19,9 +19,9 @@ public:
     bool boardChanged();
     void onBoardCheckDone();
     bool isEmptyCellsLeft();
-    int  GetWinner();
+    CellState GetWinner();
     void Draw(SpriteRenderer& renderer);
-    // void Clear();
+    void Clear();
 private:
     bool       isBoardChanged;
     Texture2D* EmptyCellSprite;

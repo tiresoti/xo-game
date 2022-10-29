@@ -6,10 +6,13 @@ void GameScreen::AddDrawable(GameObject* Gameobject)
 {
 	DrawableElements.push_back(Gameobject);
 }
+
 void GameScreen::AddInteractive(IMouseInteractive* InteractiveElement)
 {
 	InteractiveElements.push_back(InteractiveElement);
 }
+
+
 void GameScreen::Draw(SpriteRenderer* Renderer)
 {
 	if (DrawableElements.size() > 0)
