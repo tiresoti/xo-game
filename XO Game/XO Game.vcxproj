@@ -159,6 +159,7 @@
     <ClCompile Include="GameScreen.cpp" />
     <ClCompile Include="game_object.cpp" />
     <ClCompile Include="IMouseInteractive.cpp" />
+    <ClCompile Include="line_object.cpp" />
     <ClCompile Include="program.cpp" />
     <ClCompile Include="text_caption.cpp" />
     <ClCompile Include="text_renderer.cpp" />
@@ -182,6 +183,7 @@
     <ClInclude Include="GameScreen.h" />
     <ClInclude Include="game_object.h" />
     <ClInclude Include="IMouseInteractive.h" />
+    <ClInclude Include="line_object.h" />
     <ClInclude Include="text_caption.h" />
     <ClInclude Include="text_renderer.h" />
   </ItemGroup>

@@ -66,6 +66,9 @@
     <ClCompile Include="text_caption.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="line_object.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\sprite.fs">
@@ -122,6 +125,9 @@
       <Filter>Исходные файлы\Framework</Filter>
     </ClInclude>
     <ClInclude Include="text_caption.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="line_object.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

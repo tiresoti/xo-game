@@ -56,6 +56,6 @@ void GameScreen::SetActiveState(bool newstate)
 	}
 	for (GameObject* gameobject : DrawableElements)
 	{
-		gameobject->isVisible = newstate; // TODO: remove if not needed
+		gameobject->isVisible = newstate;
 	}
 }

@@ -47,6 +47,8 @@ Game::~Game()
     delete RestartButton;
     delete Text;
     delete CurrentCountText;
+    delete YouVsComputerText;
+    delete ResultText;
 }
 
 void Game::Init()
@@ -72,6 +74,8 @@ void Game::Init()
     ResourceManager::LoadTexture("res/textures/oring.png", true, "oring");
     ResourceManager::LoadTexture("res/textures/placeholder.png", true, "placeholder");
     ResourceManager::LoadTexture("res/textures/transparentpixel.png", true, "transparentpixel");
+    //ResourceManager::LoadTexture("res/textures/line_regular.png", true, "line_regular");
+    //ResourceManager::LoadTexture("res/textures/line_diagonal.png", true, "line_diagonal");
 
     // initializing input
     isMouseClicked = false;
@@ -173,7 +177,7 @@ void Game::ProcessInput()
 
     if (this->State == BOT_MOVE)
     {
-        Bot->MakeMove(); // input is blocked here
+        Bot->MakeMove(); // input is never handled here
     }
 
     if (this->State == GAME_OVER)
@@ -259,7 +263,6 @@ void Game::FinishGameWithResult(CellState winner)
     }
     case BOT:
     {
-        // set capture to lose
         ResultText->SetCaption("YOU LOST");
         Defeats += 1;
         break;
@@ -267,6 +270,7 @@ void Game::FinishGameWithResult(CellState winner)
     case EMPTY:
     {
         ResultText->SetCaption("DRAW");
+        // Line->isVisible = false;
     }
     }
     CurrentCountText->SetCaption(std::to_string(Victories) + " : " + std::to_string(Defeats));

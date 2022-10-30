@@ -3,14 +3,13 @@
 #include <iostream>
 
 
-CheckboardObject::CheckboardObject()
-	: GameObject(), IMouseInteractive(), EmptyCellSprite(), XCellSprite(), OCellSprite(), isBoardChanged(false) { }
-
 CheckboardObject::CheckboardObject(glm::vec2 pos, glm::vec2 size, Texture2D boardsprite,
-	Texture2D* emptycellsprite, Texture2D* xcellsprite, Texture2D* ocellsprite) :
+	Texture2D* emptycellsprite, Texture2D* xcellsprite, Texture2D* ocellsprite
+     ) :
 	GameObject(pos, size, boardsprite), IMouseInteractive(pos, size),
 	EmptyCellSprite(emptycellsprite),
-	XCellSprite(xcellsprite), OCellSprite(ocellsprite), isBoardChanged(false)
+	XCellSprite(xcellsprite), OCellSprite(ocellsprite),
+	isBoardChanged(false), StrikeCoords(glm::vec4(0, 0, 0, 0))
 {
 	// calculate cell size based on Checkboard size
 	float cell_width  = this->Size.x / 3, cell_height  = this->Size.y / 3;
@@ -63,7 +62,6 @@ void CheckboardObject::Draw(SpriteRenderer& renderer)
 		for (Cell& cell : row)
 			if(cell.GetCellState() != EMPTY)
 			    cell.Draw(renderer);
-
 }
 
 // getter for isBoardChanged
@@ -88,21 +86,42 @@ CellState CheckboardObject::GetWinner()
 		// if there is a vertical strike...
 		if (BoardAt(i, 0) == BoardAt(i, 1) && BoardAt(i, 0) == BoardAt(i, 2)
 			&& BoardAt(i, 0) != EMPTY)
+		{
+			// set vec2 line coordinates to (i, 0) (i, 2) via ShowCrossingLine(coords)
+			StrikeCoords = glm::vec4(i, 0, i, 2);
 			return BoardAt(i, 0); // ...return who made it
+		}
 
 		// check for a horizontal one
 		if (BoardAt(0, i) == BoardAt(1, i) && BoardAt(0, i) == BoardAt(2, i)
 			&& BoardAt(0, i) != EMPTY)
+		{
+			// set vec2 line coordinates to (0, i) (2, i)
 			return BoardAt(0, i);
+		}
 	}
 
-	// check if there is a diagonal strike
-	if (BoardAt(0, 0) == BoardAt(1, 1) && BoardAt(0, 0) == BoardAt(2, 2)
-		|| BoardAt(0, 2) == BoardAt(1, 1) && BoardAt(0, 2) == BoardAt(2, 0))
+	// check if there is a diagonal strike (from left upper to right lower)
+	if (BoardAt(0, 0) == BoardAt(1, 1) && BoardAt(0, 0) == BoardAt(2, 2))
+	{
+		// set vec2 line coordinates to (0, 0) (2, 2)
 		return BoardAt(1, 1);
+	}
+
+	// check if there is a diagonal strike (from left lower to right upper)
+	if (BoardAt(0, 2) == BoardAt(1, 1) && BoardAt(0, 2) == BoardAt(2, 0))
+	{
+		// set vec2 line coordinates to (0, 2) (2, 0)
+		return BoardAt(1, 1);
+	}
 
 	// if there are no strikes, return EMPTY
 	return EMPTY;
+}
+
+glm::vec4 CheckboardObject::GetStrikeCoords()
+{
+	return StrikeCoords;
 }
 
 bool CheckboardObject::isEmptyCellsLeft()
