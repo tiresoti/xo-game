@@ -23,8 +23,7 @@ void GameScreen::Draw(SpriteRenderer* Renderer)
 	{
 		for (GameObject* gameobject : DrawableElements)
 		{
-			if(gameobject->isVisible)
-				gameobject->Draw(*Renderer);
+			gameobject->Draw(*Renderer);
 		}
 	}
 
@@ -53,9 +52,5 @@ void GameScreen::SetActiveState(bool newstate)
 	for (IMouseInteractive* interactiveelement : InteractiveElements)
 	{
 		interactiveelement->SetActiveState(newstate);
-	}
-	for (GameObject* gameobject : DrawableElements)
-	{
-		gameobject->isVisible = newstate;
 	}
 }

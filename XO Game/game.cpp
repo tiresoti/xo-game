@@ -11,23 +11,23 @@
 #define SLEEP std::this_thread::sleep_for(std::chrono::milliseconds(5))
 
 // Renderer objects that is responsible for drawing sprites and text
-SpriteRenderer* Renderer;
-TextRenderer* Text;
-TextRenderer* BigText;
+SpriteRenderer*   Renderer;
+TextRenderer*     Text;
+TextRenderer*     BigText;
 
 // Game objects
 std::map<std::string, GameScreen*> GameScreens;
-GameScreen* StartScreen;
-GameScreen* GameActiveScreen;
-GameScreen* GameOverScreen;
-GameScreen* CurrentGameScreen;
+GameScreen*       StartScreen;
+GameScreen*       GameActiveScreen;
+GameScreen*       GameOverScreen;
+GameScreen*       CurrentGameScreen;
 CheckboardObject* Checkboard;
-BotAI* Bot;
-Button* StartButton;
-Button* RestartButton;
-TextCaption* YouVsComputerText;
-TextCaption* CurrentCountText;
-TextCaption* ResultText;
+BotAI*            Bot;
+Button*           StartButton;
+Button*           RestartButton;
+TextCaption*      YouVsComputerText;
+TextCaption*      CurrentCountText;
+TextCaption*      ResultText;
 
 
 Game::Game(unsigned int width, unsigned int height) 
@@ -74,8 +74,8 @@ void Game::Init()
     ResourceManager::LoadTexture("res/textures/oring.png", true, "oring");
     ResourceManager::LoadTexture("res/textures/placeholder.png", true, "placeholder");
     ResourceManager::LoadTexture("res/textures/transparentpixel.png", true, "transparentpixel");
-    //ResourceManager::LoadTexture("res/textures/line_regular.png", true, "line_regular");
-    //ResourceManager::LoadTexture("res/textures/line_diagonal.png", true, "line_diagonal");
+    ResourceManager::LoadTexture("res/textures/line_regular.png", true, "line_regular");
+    ResourceManager::LoadTexture("res/textures/line_diagonal.png", true, "line_diagonal");
 
     // initializing input
     isMouseClicked = false;
@@ -90,7 +90,9 @@ void Game::Init()
     Checkboard = new CheckboardObject(checkboardPos, CheckboardSize, ResourceManager::GetTexture("checkboard"),
         &ResourceManager::GetTexture("transparentpixel"),
         &ResourceManager::GetTexture("xcross"),
-        &ResourceManager::GetTexture("oring"));
+        &ResourceManager::GetTexture("oring"),
+        &ResourceManager::GetTexture("line_regular"),
+        &ResourceManager::GetTexture("line_diagonal"));
 
     // create bot
     Bot = new BotAI(Checkboard);
@@ -270,7 +272,6 @@ void Game::FinishGameWithResult(CellState winner)
     case EMPTY:
     {
         ResultText->SetCaption("DRAW");
-        // Line->isVisible = false;
     }
     }
     CurrentCountText->SetCaption(std::to_string(Victories) + " : " + std::to_string(Defeats));
