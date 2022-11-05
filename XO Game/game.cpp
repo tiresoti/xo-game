@@ -21,6 +21,7 @@ GameScreen*       StartScreen;
 GameScreen*       GameActiveScreen;
 GameScreen*       GameOverScreen;
 GameScreen*       CurrentGameScreen;
+GameObject*       Logo;
 CheckboardObject* Checkboard;
 BotAI*            Bot;
 Button*           StartButton;
@@ -32,7 +33,7 @@ TextCaption*      ResultText;
 
 Game::Game(unsigned int width, unsigned int height) 
     : State(GAME_MENU), Width(width), Height(height),
-    CheckboardSize(glm::vec2(1.0f, 1.0f)), isMouseClicked(false), CurrentMousePos(glm::vec2(0.0f, 0.0f)),
+    isMouseClicked(false), CurrentMousePos(glm::vec2(0.0f, 0.0f)),
     Victories(0), Defeats(0) { }
 
 Game::~Game()
@@ -49,6 +50,7 @@ Game::~Game()
     delete CurrentCountText;
     delete YouVsComputerText;
     delete ResultText;
+    delete Logo;
 }
 
 void Game::Init()
@@ -81,13 +83,18 @@ void Game::Init()
     isMouseClicked = false;
     CurrentMousePos = glm::vec2(0, 0);
 
+    // create logo
+    glm::vec2 logosize(Width / 3, Width / 3);
+    glm::vec2 logopos(Width / 2 - logosize.x / 2, Height / 6);
+    Logo = new GameObject(logopos, logosize, ResourceManager::GetTexture("placeholder"));
+    
     // create checkboard
-    CheckboardSize = glm::vec2(Width / 2.5f, Width / 2.5f);
-    glm::vec2 checkboardPos = glm::vec2(
-        this->Width / 3.2f - CheckboardSize.x / 2.0f,
-        this->Height / 2.0f - CheckboardSize.y / 2.0f
+    glm::vec2 checkboardsize = glm::vec2(Width / 2.5f, Width / 2.5f);
+    glm::vec2 checkboardpos = glm::vec2(
+        this->Width / 3.2f - checkboardsize.x / 2.0f,
+        this->Height / 2.0f - checkboardsize.y / 2.0f
     );
-    Checkboard = new CheckboardObject(checkboardPos, CheckboardSize, ResourceManager::GetTexture("checkboard"),
+    Checkboard = new CheckboardObject(checkboardpos, checkboardsize, ResourceManager::GetTexture("checkboard"),
         &ResourceManager::GetTexture("transparentpixel"),
         &ResourceManager::GetTexture("xcross"),
         &ResourceManager::GetTexture("oring"),
@@ -99,21 +106,22 @@ void Game::Init()
     
     // create buttons
     glm::vec2 startbuttonsize(Width / 2, Height / 5);
-    glm::vec2 startbuttonpos(Width / 2 - startbuttonsize.x / 2, Height / 2 + startbuttonsize.y / 2);
+    glm::vec2 startbuttonpos(Width / 2 - startbuttonsize.x / 2, Height / 2 + 5 * startbuttonsize.y / 6);
     StartButton = new Button(startbuttonpos, startbuttonsize, ResourceManager::GetTexture("placeholder"), ResourceManager::GetTexture("xcross"));
     
     glm::vec2 restartbuttonsize(Width / 3, Height / 6);
-    glm::vec2 restartbuttonpos(Width / 2 + restartbuttonsize.x / 4, checkboardPos.y + CheckboardSize.y - restartbuttonsize.y);
+    glm::vec2 restartbuttonpos(Width / 2 + restartbuttonsize.x / 4, checkboardpos.y + checkboardsize.y - restartbuttonsize.y);
     RestartButton = new Button(restartbuttonpos, restartbuttonsize, ResourceManager::GetTexture("placeholder"), ResourceManager::GetTexture("xcross"));
     
     // create captions
-    YouVsComputerText = new TextCaption("You vs Computer", restartbuttonpos.x + restartbuttonsize.x / 2, checkboardPos.y, 1.0f, Text);
-    CurrentCountText = new TextCaption("0 : 0", restartbuttonpos.x + restartbuttonsize.x / 2, checkboardPos.y + 50.0f, 1.0f, Text);
-    ResultText = new TextCaption("RESULT", restartbuttonpos.x + restartbuttonsize.x / 2, (checkboardPos.y + restartbuttonpos.y + restartbuttonsize.y)/ 2.0f, 1.0f,
+    YouVsComputerText = new TextCaption("You vs Computer", restartbuttonpos.x + restartbuttonsize.x / 2, checkboardpos.y, 1.0f, Text);
+    CurrentCountText = new TextCaption("0 : 0", restartbuttonpos.x + restartbuttonsize.x / 2, checkboardpos.y + 50.0f, 1.0f, Text);
+    ResultText = new TextCaption("RESULT", restartbuttonpos.x + restartbuttonsize.x / 2, (checkboardpos.y + restartbuttonpos.y + restartbuttonsize.y)/ 2.0f, 1.0f,
         BigText, glm::vec3(0.0f, 0.0f, 0.0f));
 
     // create start screen
     StartScreen = new GameScreen();
+    StartScreen->AddDrawable(Logo);
     StartScreen->AddDrawable(StartButton);
     StartScreen->AddInteractive(StartButton);
     GameScreens.insert(std::pair("StartScreen", StartScreen));

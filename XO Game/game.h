@@ -42,8 +42,6 @@ public:
 private:
     // initial size of the window
     unsigned int Width, Height;
-    // initial size of the checkboard
-    glm::vec2 CheckboardSize;
     // win/lose count
     unsigned int Victories, Defeats;
     void RestartGame(); // TODO: game restart
