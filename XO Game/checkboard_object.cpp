@@ -1,6 +1,6 @@
 #include "checkboard_object.h"
 
-#include <iostream>
+
 
 
 CheckboardObject::CheckboardObject(glm::vec2 pos, glm::vec2 size, Texture2D boardsprite,

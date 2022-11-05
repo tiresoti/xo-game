@@ -7,11 +7,13 @@
 ** option) any later version.
 ******************************************************************/
 #include "resource_manager.h"
-
-#include <iostream>
 #include <sstream>
 #include <fstream>
-#include <cassert>
+
+#ifdef DEBUG
+#include <iostream>
+#endif // DEBUG
+
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "../stb/stb_image.h"
@@ -93,7 +95,10 @@ Shader ResourceManager::loadShaderFromFile(const char* vertexPath, const char* f
     }
     catch (std::ifstream::failure e)
     {
+#ifdef DEBUG
         std::cout << "ERROR::SHADER: Failed to read shader files\n" << e.what() << std::endl;
+#endif // DEBUG
+        exit(1337);
     }
     const char *vShaderCode = vertexCode.c_str();
     const char *fShaderCode = fragmentCode.c_str();
@@ -114,11 +119,29 @@ Texture2D ResourceManager::loadTextureFromFile(const char *file, bool alpha)
         texture.Image_Format = GL_RGBA;
     }
     // load image
-    int width, height, nrChannels;
-    unsigned char* data = stbi_load(file, &width, &height, &nrChannels, 0);
-    // now generate texture
-    texture.Generate(width, height, data);
-    // and finally free image data
-    stbi_image_free(data);
+    try
+    {
+        int width, height, nrChannels;
+        unsigned char* data = stbi_load(file, &width, &height, &nrChannels, 0);
+
+        // MY ADDITION: if data couldn't be loaded, program halts or writes to iostream
+        if (!data)
+        {
+#ifdef DEBUG
+            std::cout << "ERROR::STBI: Failed to load image data for " << file << std::endl;
+#endif // DEBUG
+            throw std::exception();
+        }
+        // now generate texture
+        texture.Generate(width, height, data);
+        // and finally free image data
+        stbi_image_free(data);
+    }
+
+    catch(std::exception)
+    {
+        exit(1337);
+    }
+
     return texture;
 }

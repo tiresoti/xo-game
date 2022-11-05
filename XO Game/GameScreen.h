@@ -6,7 +6,6 @@
 #include "text_caption.h"
 #include <vector>
 
-#include <iostream>
 
 class GameScreen
 {

@@ -39,11 +39,15 @@ public:
     void ProcessInput();
     void Update(float dt);
     void Render();
+    // window size doubling option - only call before Init() to avoid cropping
+    void DoubleWindowSize();
 private:
     // initial size of the window
     unsigned int Width, Height;
     // win/lose count
     unsigned int Victories, Defeats;
+    // font scale
+    unsigned int FontScale;
     void RestartGame(); // TODO: game restart
     void CheckBoardChanges();
     void SwitchToGameScreen(GameState newstate, std::string gamescreenname);

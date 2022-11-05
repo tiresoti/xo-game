@@ -1,6 +1,6 @@
 #pragma once
 #include "checkboard_object.h"
-#include <iostream>
+
 
 // A bot who is an opponent for a player. Changes checkboard object by pointer
 class BotAI

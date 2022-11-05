@@ -5,18 +5,20 @@
 #include "game.h"
 #include "framework/resource_manager.h"
 
+#ifdef DEBUG
 #include <iostream>
+#endif // DEBUG
+
 
 // GLFW function declarations
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
-void cursor_position_callback(GLFWwindow*, double xpos, double ypos);
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 
-// The Width of the screen
-const unsigned int SCREEN_WIDTH = 900;
+// The width of the screen
+unsigned int SCREEN_WIDTH = 900;
 // The height of the screen
-const unsigned int SCREEN_HEIGHT = 600;
+unsigned int SCREEN_HEIGHT = 600;
 
 Game XO(SCREEN_WIDTH, SCREEN_HEIGHT);
 
@@ -28,6 +30,22 @@ int main(int argc, char* argv[])
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, false);
 
+    GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+    int xpos, ypos, width, height;
+    glfwGetMonitorWorkarea(monitor,
+        &xpos,
+        &ypos,
+        &width,
+        &height
+    );
+
+    if (width > 2000 && height > 1000)
+    {
+        SCREEN_WIDTH *= 2;
+        SCREEN_HEIGHT *= 2;
+        XO.DoubleWindowSize();
+    }
+
     GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "XO", nullptr, nullptr);
     glfwMakeContextCurrent(window);
 
@@ -35,12 +53,13 @@ int main(int argc, char* argv[])
     // ---------------------------------------
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
+#ifdef DEBUG
         std::cout << "Failed to initialize GLAD" << std::endl;
+#endif // DEBUG
         return -1;
     }
 
     glfwSetKeyCallback(window, key_callback);
-    //glfwSetCursorPosCallback(window, cursor_position_callback);
     glfwSetMouseButtonCallback(window, mouse_button_callback);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
@@ -100,10 +119,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         glfwSetWindowShouldClose(window, true);
 }
 
-void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
-{
-    
-}
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {

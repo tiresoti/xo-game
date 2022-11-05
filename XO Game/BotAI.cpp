@@ -1,6 +1,7 @@
 #include "BotAI.h"
 #include <random>
 #include <algorithm>
+#include <chrono>
 
 BotAI::BotAI(CheckboardObject* checkboard) :  Checkboard(checkboard) { }
 

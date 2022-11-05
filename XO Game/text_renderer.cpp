@@ -6,7 +6,6 @@
 ** Creative Commons, either version 4 of the License, or (at your
 ** option) any later version.
 ******************************************************************/
-#include <iostream>
 
 #include "glm/gtc/matrix_transform.hpp"
 #include <ft2build.h>
@@ -14,6 +13,11 @@
 
 #include "text_renderer.h"
 #include "framework/resource_manager.h"
+
+//#ifdef DEBUG
+#include <iostream>
+//#endif // DEBUG
+
 
 
 TextRenderer::TextRenderer(unsigned int width, unsigned int height, Shader& textshader)
@@ -41,11 +45,23 @@ void TextRenderer::Load(std::string font, unsigned int fontSize)
     // then initialize and load the FreeType library
     FT_Library ft;    
     if (FT_Init_FreeType(&ft)) // all functions return a value different than 0 whenever an error occurred
+    {
+#ifdef DEBUG
         std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
+#endif // DEBUG
+        exit(555);
+    }
+
     // load font as face
     FT_Face face;
     if (FT_New_Face(ft, font.c_str(), 0, &face))
+    {
+#ifdef DEBUG
         std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
+#endif // DEBUG
+        exit(555);
+    }
+
     // set size to load glyphs as
     FT_Set_Pixel_Sizes(face, 0, fontSize);
     // disable byte-alignment restriction
@@ -56,7 +72,9 @@ void TextRenderer::Load(std::string font, unsigned int fontSize)
         // load character glyph 
         if (FT_Load_Char(face, c, FT_LOAD_RENDER))
         {
-            std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
+#ifdef DEBUG
+            std::cout << "ERROR::FREETYPE: Failed to load Glyph" << std::endl;
+#endif // DEBUG
             continue;
         }
         // generate texture

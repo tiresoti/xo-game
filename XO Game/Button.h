@@ -2,8 +2,6 @@
 #include "game_object.h"
 #include "IMouseInteractive.h"
 
-#include <iostream>
-
 class Button : public GameObject, public IMouseInteractive
 {
 public:

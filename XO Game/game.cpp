@@ -4,8 +4,10 @@
 #include "framework/sprite_renderer.h"
 #include <chrono>
 #include <thread>
-// debug
+
+#ifdef DEBUG
 #include <iostream>
+#endif // DEBUG
 
 // A little delay between frame to avoid CPU overloading
 #define SLEEP std::this_thread::sleep_for(std::chrono::milliseconds(5))
@@ -34,7 +36,7 @@ TextCaption*      ResultText;
 Game::Game(unsigned int width, unsigned int height) 
     : State(GAME_MENU), Width(width), Height(height),
     isMouseClicked(false), CurrentMousePos(glm::vec2(0.0f, 0.0f)),
-    Victories(0), Defeats(0) { }
+    Victories(0), Defeats(0), FontScale(1) { }
 
 Game::~Game()
 {
@@ -66,15 +68,15 @@ void Game::Init()
     // create renderers
     Renderer = new SpriteRenderer(ResourceManager::GetShader("sprite"));
     Text = new TextRenderer(this->Width, this->Height, ResourceManager::GetShader("text"));
-    Text->Load("res/fonts/ocraext.TTF", 30);
+    Text->Load("res/fonts/ocraext.TTF", 30 * FontScale);
     BigText = new TextRenderer(this->Width, this->Height, ResourceManager::GetShader("text"));
-    BigText->Load("res/fonts/ocraext.TTF", 56);
+    BigText->Load("res/fonts/ocraext.TTF", 56 * FontScale);
     // load textures
     ResourceManager::LoadTexture("res/textures/background.jpg", false, "background");
     ResourceManager::LoadTexture("res/textures/checkboard.png", true, "checkboard");
     ResourceManager::LoadTexture("res/textures/xcross.png", true, "xcross");
     ResourceManager::LoadTexture("res/textures/oring.png", true, "oring");
-    ResourceManager::LoadTexture("res/textures/placeholder.png", true, "placeholder");
+    ResourceManager::LoadTexture("res/textures/placeholder_old.png", true, "placeholder");
     ResourceManager::LoadTexture("res/textures/transparentpixel.png", true, "transparentpixel");
     ResourceManager::LoadTexture("res/textures/line_regular.png", true, "line_regular");
     ResourceManager::LoadTexture("res/textures/line_diagonal.png", true, "line_diagonal");
@@ -182,7 +184,9 @@ void Game::ProcessInput()
     {
         if (!isMouseClicked) {}
         else
+        {
             CurrentGameScreen->HandleInput(CurrentMousePos);
+        }
     }
 
     if (this->State == BOT_MOVE)
@@ -253,9 +257,17 @@ void Game::SwitchToGameScreen(GameState newstate, std::string newgamescreenname)
 {
     this->State = newstate;
     CurrentGameScreen->SetActiveState(false);
+
     if (GameScreens[newgamescreenname])
         CurrentGameScreen = GameScreens[newgamescreenname];
-    else std::cout << "Couldn't load game screen " << newgamescreenname << ", doesn't exist\n";
+    else
+    {
+#ifdef DEBUG
+        std::cout << "Couldn't load game screen " << newgamescreenname << ", doesn't exist\n";
+#endif // DEBUG
+        exit(228);
+    }
+ 
     CurrentGameScreen->SetActiveState(true);
 }
 
@@ -284,4 +296,11 @@ void Game::FinishGameWithResult(CellState winner)
     }
     CurrentCountText->SetCaption(std::to_string(Victories) + " : " + std::to_string(Defeats));
     SwitchToGameScreen(GAME_OVER, "GameOverScreen");
+}
+
+void Game::DoubleWindowSize()
+{
+    this->Width *= 2;
+    this->Height *= 2;
+    FontScale *= 2;
 }

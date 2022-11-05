@@ -8,7 +8,9 @@
 ******************************************************************/
 #include "shader.h"
 
+#ifdef DEBUG
 #include <iostream>
+#endif // DEBUG
 
 Shader &Shader::Use()
 {
@@ -117,21 +119,28 @@ void Shader::checkCompileErrors(unsigned int object, std::string type)
         glGetShaderiv(object, GL_COMPILE_STATUS, &success);
         if (!success)
         {
+#ifdef DEBUG
             glGetShaderInfoLog(object, 1024, NULL, infoLog);
             std::cout << "| ERROR::SHADER: Compile-time error: Type: " << type << "\n"
                 << infoLog << "\n -- --------------------------------------------------- -- "
                 << std::endl;
+#endif // DEBUG
+            exit(13);
         }
     }
+
     else
     {
         glGetProgramiv(object, GL_LINK_STATUS, &success);
         if (!success)
         {
+#ifdef DEBUG
             glGetProgramInfoLog(object, 1024, NULL, infoLog);
             std::cout << "| ERROR::Shader: Link-time error: Type: " << type << "\n"
                 << infoLog << "\n -- --------------------------------------------------- -- "
                 << std::endl;
+#endif // DEBUG
+            exit(13);
         }
     }
 }
