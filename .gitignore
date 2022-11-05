@@ -2,7 +2,7 @@
 .vs/
 x64/
 XO Game/x64/
+XO Game/res/textures/temp
 
 # ignored files
 *.bak
-sizes.txt
