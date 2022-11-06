@@ -56,6 +56,7 @@ int main(int argc, char* argv[])
 #ifdef DEBUG
         std::cout << "Failed to initialize GLAD" << std::endl;
 #endif // DEBUG
+        Logger::WriteToLog("Failed to initialize GLAD. Try to run the game again.\n");
         return -1;
     }
 

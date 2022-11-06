@@ -125,6 +125,7 @@ void Shader::checkCompileErrors(unsigned int object, std::string type)
                 << infoLog << "\n -- --------------------------------------------------- -- "
                 << std::endl;
 #endif // DEBUG
+            Logger::WriteToLog("ERROR::SHADER: Shaders couldn't be compiled. Please, redownload the game.\n");
             exit(13);
         }
     }
@@ -140,6 +141,7 @@ void Shader::checkCompileErrors(unsigned int object, std::string type)
                 << infoLog << "\n -- --------------------------------------------------- -- "
                 << std::endl;
 #endif // DEBUG
+            Logger::WriteToLog("ERROR::SHADER: Shaders couldn't be linked. Please, redownload the game.\n");
             exit(13);
         }
     }

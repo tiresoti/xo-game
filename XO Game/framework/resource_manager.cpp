@@ -98,6 +98,7 @@ Shader ResourceManager::loadShaderFromFile(const char* vertexPath, const char* f
 #ifdef DEBUG
         std::cout << "ERROR::SHADER: Failed to read shader files\n" << e.what() << std::endl;
 #endif // DEBUG
+        Logger::WriteToLog("ERROR::SHADER: Failed to read shader files. Please, redownload the game.\n");
         exit(1337);
     }
     const char *vShaderCode = vertexCode.c_str();
@@ -125,11 +126,12 @@ Texture2D ResourceManager::loadTextureFromFile(const char *file, bool alpha)
         unsigned char* data = stbi_load(file, &width, &height, &nrChannels, 0);
 
         // MY ADDITION: if data couldn't be loaded, program halts or writes to iostream
-        if (!data)
+        if (data == nullptr)
         {
 #ifdef DEBUG
             std::cout << "ERROR::STBI: Failed to load image data for " << file << std::endl;
 #endif // DEBUG
+            Logger::WriteToLog("ERROR: Failed to load images. Please, redownload the game.\n");
             throw std::exception();
         }
         // now generate texture

@@ -15,6 +15,7 @@
 
 #include "framework/texture.h"
 #include "framework/shader.h"
+#include "logger.h"
 
 
 /// Holds all state information relevant to a character as loaded using FreeType

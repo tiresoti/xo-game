@@ -15,6 +15,7 @@
 
 #include "texture.h"
 #include "shader.h"
+#include "../logger.h"
 
 
 // A static singleton ResourceManager class that hosts several

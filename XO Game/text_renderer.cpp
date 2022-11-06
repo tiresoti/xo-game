@@ -49,6 +49,7 @@ void TextRenderer::Load(std::string font, unsigned int fontSize)
 #ifdef DEBUG
         std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
 #endif // DEBUG
+        Logger::WriteToLog("ERROR::FREETYPE: A problem with fonts. Please, redownload the game.\n");
         exit(555);
     }
 
@@ -59,6 +60,7 @@ void TextRenderer::Load(std::string font, unsigned int fontSize)
 #ifdef DEBUG
         std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
 #endif // DEBUG
+        Logger::WriteToLog("ERROR::FREETYPE: A problem with fonts. Please, redownload the game.\n");
         exit(555);
     }
 
@@ -75,6 +77,7 @@ void TextRenderer::Load(std::string font, unsigned int fontSize)
 #ifdef DEBUG
             std::cout << "ERROR::FREETYPE: Failed to load Glyph" << std::endl;
 #endif // DEBUG
+            Logger::WriteToLog("ERROR::FREETYPE: A problem with fonts, some letters can be missing. Please, redownload the game.\n");
             continue;
         }
         // generate texture

@@ -267,8 +267,9 @@ void Game::SwitchToGameScreen(GameState newstate, std::string newgamescreenname)
     else
     {
 #ifdef DEBUG
-        std::cout << "Couldn't load game screen " << newgamescreenname << ", doesn't exist\n";
+        std::cout << "ERROR: Couldn't load game screen " << newgamescreenname << ", doesn't exist\n";
 #endif // DEBUG
+        Logger::WriteToLog("ERROR: Couldn't load game screen " + newgamescreenname + ", doesn't exist.\n");
         exit(228);
     }
  
