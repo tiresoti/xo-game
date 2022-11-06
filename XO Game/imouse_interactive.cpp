@@ -1,4 +1,4 @@
-#include "IMouseInteractive.h"
+#include "imouse_interactive.h"
 
 IMouseInteractive::IMouseInteractive() :
 	InteractivePosition(glm::vec2(0.0f, 0.0f)), InteractiveSize(glm::vec2(0.0f, 0.0f)), isActive(false) { }

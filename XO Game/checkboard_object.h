@@ -3,7 +3,7 @@
 #include "game_object.h" 
 #include "cell_object.h"
 #include "line_object.h"
-#include "IMouseInteractive.h"
+#include "imouse_interactive.h"
 #include <vector>
   
 class CheckboardObject : public GameObject, public IMouseInteractive

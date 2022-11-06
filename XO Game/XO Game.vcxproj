@@ -153,8 +153,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BotAI.cpp" />
-    <ClCompile Include="Button.cpp" />
+    <ClCompile Include="bot_ai.cpp" />
+    <ClCompile Include="button.cpp" />
     <ClCompile Include="cell_object.cpp" />
     <ClCompile Include="checkboard_object.cpp" />
     <ClCompile Include="framework\resource_manager.cpp" />
@@ -162,9 +162,9 @@
     <ClCompile Include="framework\sprite_renderer.cpp" />
     <ClCompile Include="framework\texture.cpp" />
     <ClCompile Include="game.cpp" />
-    <ClCompile Include="GameScreen.cpp" />
+    <ClCompile Include="game_screen.cpp" />
     <ClCompile Include="game_object.cpp" />
-    <ClCompile Include="IMouseInteractive.cpp" />
+    <ClCompile Include="imouse_interactive.cpp" />
     <ClCompile Include="line_object.cpp" />
     <ClCompile Include="logger.cpp" />
     <ClCompile Include="program.cpp" />
@@ -178,8 +178,8 @@
     <None Include="res\shaders\text_2d.vs" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BotAI.h" />
-    <ClInclude Include="Button.h" />
+    <ClInclude Include="bot_ai.h" />
+    <ClInclude Include="button.h" />
     <ClInclude Include="cell_object.h" />
     <ClInclude Include="checkboard_object.h" />
     <ClInclude Include="framework\resource_manager.h" />
@@ -187,9 +187,9 @@
     <ClInclude Include="framework\sprite_renderer.h" />
     <ClInclude Include="framework\texture.h" />
     <ClInclude Include="game.h" />
-    <ClInclude Include="GameScreen.h" />
+    <ClInclude Include="game_screen.h" />
     <ClInclude Include="game_object.h" />
-    <ClInclude Include="IMouseInteractive.h" />
+    <ClInclude Include="imouse_interactive.h" />
     <ClInclude Include="line_object.h" />
     <ClInclude Include="logger.h" />
     <ClInclude Include="text_caption.h" />

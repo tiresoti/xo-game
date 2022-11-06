@@ -67,9 +67,9 @@ void Game::Init()
     ResourceManager::GetShader("sprite").SetMatrix4("projection", projection);
     // create renderers
     Renderer = new SpriteRenderer(ResourceManager::GetShader("sprite"));
-    Text = new TextRenderer(this->Width, this->Height, ResourceManager::GetShader("text"));
+    Text     = new TextRenderer(this->Width, this->Height, ResourceManager::GetShader("text"));
     Text->Load("res/fonts/ocraext.TTF", 30 * FontScale);
-    BigText = new TextRenderer(this->Width, this->Height, ResourceManager::GetShader("text"));
+    BigText  = new TextRenderer(this->Width, this->Height, ResourceManager::GetShader("text"));
     BigText->Load("res/fonts/ocraext.TTF", 56 * FontScale);
     // load textures
     ResourceManager::LoadTexture("res/textures/background.jpg", false, "background");
@@ -121,8 +121,8 @@ void Game::Init()
     
     // create captions
     YouVsComputerText = new TextCaption("You vs Computer", restartbuttonpos.x + restartbuttonsize.x / 2, checkboardpos.y, 1.0f, Text);
-    CurrentCountText = new TextCaption("0 : 0", restartbuttonpos.x + restartbuttonsize.x / 2, checkboardpos.y + 50.0f, 1.0f, Text);
-    ResultText = new TextCaption("RESULT", restartbuttonpos.x + restartbuttonsize.x / 2, (checkboardpos.y + restartbuttonpos.y + restartbuttonsize.y)/ 2.0f, 1.0f,
+    CurrentCountText  = new TextCaption("0 : 0", restartbuttonpos.x + restartbuttonsize.x / 2, checkboardpos.y + 50.0f, 1.0f, Text);
+    ResultText        = new TextCaption("RESULT", restartbuttonpos.x + restartbuttonsize.x / 2, (checkboardpos.y + restartbuttonpos.y + restartbuttonsize.y)/ 2.0f, 1.0f,
         BigText, glm::vec3(0.0f, 0.0f, 0.0f));
 
     // create start screen

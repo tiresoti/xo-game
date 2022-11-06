@@ -2,7 +2,7 @@
 #include "framework/sprite_renderer.h"
 #include "glm/glm.hpp"
 #include "game_object.h"
-#include "IMouseInteractive.h"
+#include "imouse_interactive.h"
 #include "text_caption.h"
 #include <vector>
 

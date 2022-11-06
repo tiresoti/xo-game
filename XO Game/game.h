@@ -2,9 +2,9 @@
 
 #include "game_object.h"
 #include "checkboard_object.h"
-#include "BotAI.h"
-#include "GameScreen.h"
-#include "Button.h"
+#include "bot_ai.h"
+#include "game_screen.h"
+#include "button.h"
 #include "text_renderer.h"
 #include "text_caption.h"
 #include "glad/include/glad/glad.h"

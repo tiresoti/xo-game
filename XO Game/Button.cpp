@@ -1,4 +1,4 @@
-#include "Button.h"
+#include "button.h"
 
 Button::Button(glm::vec2 pos, glm::vec2 size, Texture2D sprite) :
 	GameObject(pos, size, sprite),

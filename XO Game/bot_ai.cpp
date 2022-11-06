@@ -1,4 +1,4 @@
-#include "BotAI.h"
+#include "bot_ai.h"
 #include <random>
 #include <algorithm>
 #include <chrono>

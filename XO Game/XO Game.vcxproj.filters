@@ -48,16 +48,16 @@
     <ClCompile Include="cell_object.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="BotAI.cpp">
+    <ClCompile Include="bot_ai.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="Button.cpp">
+    <ClCompile Include="button.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="IMouseInteractive.cpp">
+    <ClCompile Include="imouse_interactive.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="GameScreen.cpp">
+    <ClCompile Include="game_screen.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="text_renderer.cpp">
@@ -100,16 +100,16 @@
     <ClInclude Include="framework\texture.h">
       <Filter>Исходные файлы\Framework</Filter>
     </ClInclude>
-    <ClInclude Include="IMouseInteractive.h">
+    <ClInclude Include="imouse_interactive.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="GameScreen.h">
+    <ClInclude Include="game_screen.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="BotAI.h">
+    <ClInclude Include="bot_ai.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="Button.h">
+    <ClInclude Include="button.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="cell_object.h">

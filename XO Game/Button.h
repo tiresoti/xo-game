@@ -1,6 +1,6 @@
 #pragma once
 #include "game_object.h"
-#include "IMouseInteractive.h"
+#include "imouse_interactive.h"
 
 class Button : public GameObject, public IMouseInteractive
 {
