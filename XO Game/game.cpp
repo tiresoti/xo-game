@@ -76,7 +76,11 @@ void Game::Init()
     ResourceManager::LoadTexture("res/textures/checkboard.png", true, "checkboard");
     ResourceManager::LoadTexture("res/textures/xcross.png", true, "xcross");
     ResourceManager::LoadTexture("res/textures/oring.png", true, "oring");
-    ResourceManager::LoadTexture("res/textures/placeholder_old.png", true, "placeholder");
+    ResourceManager::LoadTexture("res/textures/placeholder.png", true, "placeholder");
+    ResourceManager::LoadTexture("res/textures/startbutton.png", true, "startbutton");
+    ResourceManager::LoadTexture("res/textures/startbutton_pressed.png", true, "startbutton_pressed");
+    ResourceManager::LoadTexture("res/textures/restartbutton.png", true, "restartbutton");
+    ResourceManager::LoadTexture("res/textures/restartbutton_pressed.png", true, "restartbutton_pressed");
     ResourceManager::LoadTexture("res/textures/transparentpixel.png", true, "transparentpixel");
     ResourceManager::LoadTexture("res/textures/line_regular.png", true, "line_regular");
     ResourceManager::LoadTexture("res/textures/line_diagonal.png", true, "line_diagonal");
@@ -87,7 +91,7 @@ void Game::Init()
 
     // create logo
     glm::vec2 logosize(Width / 3, Width / 3);
-    glm::vec2 logopos(Width / 2 - logosize.x / 2, Height / 6);
+    glm::vec2 logopos(Width / 2 - logosize.x / 2, Height / 7);
     Logo = new GameObject(logopos, logosize, ResourceManager::GetTexture("placeholder"));
     
     // create checkboard
@@ -107,13 +111,13 @@ void Game::Init()
     Bot = new BotAI(Checkboard);
     
     // create buttons
-    glm::vec2 startbuttonsize(Width / 2, Height / 5);
+    glm::vec2 startbuttonsize(Width / 2.5f, Height / 5);
     glm::vec2 startbuttonpos(Width / 2 - startbuttonsize.x / 2, Height / 2 + 5 * startbuttonsize.y / 6);
-    StartButton = new Button(startbuttonpos, startbuttonsize, ResourceManager::GetTexture("placeholder"), ResourceManager::GetTexture("xcross"));
-    
+    StartButton = new Button(startbuttonpos, startbuttonsize, ResourceManager::GetTexture("startbutton"), ResourceManager::GetTexture("startbutton_pressed"));
+
     glm::vec2 restartbuttonsize(Width / 3, Height / 6);
     glm::vec2 restartbuttonpos(Width / 2 + restartbuttonsize.x / 4, checkboardpos.y + checkboardsize.y - restartbuttonsize.y);
-    RestartButton = new Button(restartbuttonpos, restartbuttonsize, ResourceManager::GetTexture("placeholder"), ResourceManager::GetTexture("xcross"));
+    RestartButton = new Button(restartbuttonpos, restartbuttonsize, ResourceManager::GetTexture("restartbutton"), ResourceManager::GetTexture("restartbutton_pressed"));
     
     // create captions
     YouVsComputerText = new TextCaption("You vs Computer", restartbuttonpos.x + restartbuttonsize.x / 2, checkboardpos.y, 1.0f, Text);

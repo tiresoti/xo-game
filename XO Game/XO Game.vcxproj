@@ -190,6 +190,7 @@
     <ClInclude Include="game_object.h" />
     <ClInclude Include="IMouseInteractive.h" />
     <ClInclude Include="line_object.h" />
+    <ClInclude Include="logger.h" />
     <ClInclude Include="text_caption.h" />
     <ClInclude Include="text_renderer.h" />
   </ItemGroup>
