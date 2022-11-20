@@ -10,3 +10,6 @@ My code is based on Joey De Vries [Learn OpenGL tutorial](https://learnopengl.co
  4. Enjoy!
 
 If something goes wrong, the game wouldn't run and an *errors.txt* file will be created.
+
+Feel free to contribute to my game in visual part! Current textures are stubs, and I'd like to change them.
+You can submit yours, just follow the original proportions and file format (PNG or JPG), otherwise the pictures will be stretched. All images lay in [*/XO Game/res/textures/*](https://github.com/tiresoti/xo-game/tree/main/XO%20Game/res/textures) directory, fonts are in */XO Game/res/fonts*.
