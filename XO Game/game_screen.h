@@ -11,15 +11,15 @@ class GameScreen
 {
 public:
     GameScreen();
-    void AddDrawable(GameObject*);
-    void AddInteractive(IMouseInteractive*);
-    void AddCaption(TextCaption*);
-    void Draw(SpriteRenderer* Renderer);
+    void AddDrawable(std::shared_ptr <GameObject>);
+    void AddInteractive(std::shared_ptr <IMouseInteractive>);
+    void AddCaption(std::shared_ptr <TextCaption>);
+    void Draw(std::shared_ptr <SpriteRenderer> Renderer);
     void HandleInput(glm::vec2 MousePosition);
     void SetActiveState(bool activestate);
 private:
-    std::vector <GameObject*>        DrawableElements;
-    std::vector <IMouseInteractive*> InteractiveElements;
-    std::vector <TextCaption*>       TextElements;
+    std::vector <std::shared_ptr<GameObject>>        DrawableElements;
+    std::vector <std::shared_ptr <IMouseInteractive>> InteractiveElements;
+    std::vector <std::shared_ptr <TextCaption>>       TextElements;
 };
 

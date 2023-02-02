@@ -1,7 +1,7 @@
 #include "text_caption.h"
 
 TextCaption::TextCaption(std::string text, float centerX, float y, float scale,
-	TextRenderer* textrenderer, glm::vec3 color) :
+	std::shared_ptr <TextRenderer> textrenderer, glm::vec3 color) :
 	TextString(text), Scale(scale), positionX(centerX), positionY(y),
 	OwnTextRenderer(textrenderer), Color(color) { }
 
@@ -11,5 +11,5 @@ void TextCaption::DrawText()
 }
 void TextCaption::SetCaption(std::string newtext)
 {
-	TextString = newtext;
+	TextString = std::move(newtext);
 }

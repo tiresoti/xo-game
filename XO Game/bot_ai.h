@@ -6,10 +6,10 @@
 class BotAI
 {
 public:
-	BotAI(CheckboardObject*);
+	BotAI(std::shared_ptr <CheckboardObject>);
 	void MakeMove();
 private:
-	CheckboardObject* Checkboard;
+	std::shared_ptr <CheckboardObject> Checkboard;
 	bool isTwoCellsInARow();
 	bool isCentralCellFree();
 	bool isClosestFilled();

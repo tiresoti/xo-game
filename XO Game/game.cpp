@@ -18,22 +18,6 @@ Game::Game(unsigned int width, unsigned int height)
     isMouseClicked(false), CurrentMousePos(glm::vec2(0.0f, 0.0f)),
     Victories(0), Defeats(0), FontScale(1) { }
 
-Game::~Game()
-{
-    delete Renderer;
-    delete Checkboard;
-    delete Bot;
-    delete StartScreen;
-    delete GameActiveScreen;
-    delete GameOverScreen;
-    delete StartButton;
-    delete RestartButton;
-    delete Text;
-    delete CurrentCountText;
-    delete YouVsComputerText;
-    delete ResultText;
-    delete Logo;
-}
 
 void Game::Init()
 {
@@ -46,10 +30,10 @@ void Game::Init()
     ResourceManager::GetShader("sprite").Use().SetInteger("image", 0);
     ResourceManager::GetShader("sprite").SetMatrix4("projection", projection);
     // create renderers
-    Renderer = new SpriteRenderer(ResourceManager::GetShader("sprite"));
-    Text     = new TextRenderer(this->Width, this->Height, ResourceManager::GetShader("text"));
+    Renderer = std::make_shared <SpriteRenderer>(ResourceManager::GetShader("sprite"));
+    Text     = std::make_shared <TextRenderer>(this->Width, this->Height, ResourceManager::GetShader("text"));
     Text->Load("res/fonts/ocraext.TTF", 30 * FontScale);
-    BigText  = new TextRenderer(this->Width, this->Height, ResourceManager::GetShader("text"));
+    BigText  = std::make_shared <TextRenderer>(this->Width, this->Height, ResourceManager::GetShader("text"));
     BigText->Load("res/fonts/ocraext.TTF", 56 * FontScale);
     // load textures
     ResourceManager::LoadTexture("res/textures/background.jpg", false, "background");
@@ -72,7 +56,8 @@ void Game::Init()
     // create logo
     glm::vec2 logosize(Width / 3, Width / 3);
     glm::vec2 logopos(Width / 2 - logosize.x / 2, Height / 7);
-    Logo = new GameObject(logopos, logosize, ResourceManager::GetTexture("placeholder"));
+    //Logo = new GameObject(logopos, logosize, ResourceManager::GetTexture("placeholder"));
+    Logo = std::make_shared<GameObject>(logopos, logosize, ResourceManager::GetTexture("placeholder"));
     
     // create checkboard
     glm::vec2 checkboardsize = glm::vec2(Width / 2.5f, Width / 2.5f);
@@ -80,7 +65,7 @@ void Game::Init()
         this->Width / 3.2f - checkboardsize.x / 2.0f,
         this->Height / 2.0f - checkboardsize.y / 2.0f
     );
-    Checkboard = new CheckboardObject(checkboardpos, checkboardsize, ResourceManager::GetTexture("checkboard"),
+    Checkboard = std::make_shared <CheckboardObject>(checkboardpos, checkboardsize, ResourceManager::GetTexture("checkboard"),
         &ResourceManager::GetTexture("transparentpixel"),
         &ResourceManager::GetTexture("xcross"),
         &ResourceManager::GetTexture("oring"),
@@ -88,32 +73,32 @@ void Game::Init()
         &ResourceManager::GetTexture("line_diagonal"));
 
     // create bot
-    Bot = new BotAI(Checkboard);
+    Bot = std::make_shared<BotAI>(Checkboard);
     
     // create buttons
     glm::vec2 startbuttonsize(Width / 2.5f, Height / 5);
     glm::vec2 startbuttonpos(Width / 2 - startbuttonsize.x / 2, Height / 2 + 5 * startbuttonsize.y / 6);
-    StartButton = new Button(startbuttonpos, startbuttonsize, ResourceManager::GetTexture("startbutton"), ResourceManager::GetTexture("startbutton_pressed"));
+    StartButton = std::make_shared <Button>(startbuttonpos, startbuttonsize, ResourceManager::GetTexture("startbutton"), ResourceManager::GetTexture("startbutton_pressed"));
 
     glm::vec2 restartbuttonsize(Width / 3, Height / 6);
     glm::vec2 restartbuttonpos(Width / 2 + restartbuttonsize.x / 4, checkboardpos.y + checkboardsize.y - restartbuttonsize.y);
-    RestartButton = new Button(restartbuttonpos, restartbuttonsize, ResourceManager::GetTexture("restartbutton"), ResourceManager::GetTexture("restartbutton_pressed"));
+    RestartButton = std::make_shared <Button>(restartbuttonpos, restartbuttonsize, ResourceManager::GetTexture("restartbutton"), ResourceManager::GetTexture("restartbutton_pressed"));
     
     // create captions
-    YouVsComputerText = new TextCaption("You vs Computer", restartbuttonpos.x + restartbuttonsize.x / 2, checkboardpos.y, 1.0f, Text);
-    CurrentCountText  = new TextCaption("0 : 0", restartbuttonpos.x + restartbuttonsize.x / 2, checkboardpos.y + 50.0f, 1.0f, Text);
-    ResultText        = new TextCaption("RESULT", restartbuttonpos.x + restartbuttonsize.x / 2, (checkboardpos.y + restartbuttonpos.y + restartbuttonsize.y)/ 2.0f, 1.0f,
+    YouVsComputerText = std::make_shared <TextCaption>("You vs Computer", restartbuttonpos.x + restartbuttonsize.x / 2, checkboardpos.y, 1.0f, Text);
+    CurrentCountText  = std::make_shared <TextCaption>("0 : 0", restartbuttonpos.x + restartbuttonsize.x / 2, checkboardpos.y + 50.0f, 1.0f, Text);
+    ResultText        = std::make_shared <TextCaption>("RESULT", restartbuttonpos.x + restartbuttonsize.x / 2, (checkboardpos.y + restartbuttonpos.y + restartbuttonsize.y)/ 2.0f, 1.0f,
         BigText, glm::vec3(0.0f, 0.0f, 0.0f));
 
     // create start screen
-    StartScreen = new GameScreen();
+    StartScreen = std::make_shared <GameScreen>();
     StartScreen->AddDrawable(Logo);
     StartScreen->AddDrawable(StartButton);
     StartScreen->AddInteractive(StartButton);
     GameScreens.insert(std::pair("StartScreen", StartScreen));
 
     // create main game screen
-    GameActiveScreen = new GameScreen();
+    GameActiveScreen = std::make_shared <GameScreen>();
     GameActiveScreen->AddDrawable(Checkboard);
     GameActiveScreen->AddInteractive(Checkboard);
     GameActiveScreen->AddCaption(YouVsComputerText);
@@ -121,7 +106,7 @@ void Game::Init()
     GameScreens.insert(std::pair("GameActiveScreen", GameActiveScreen));
 
     // create game over screen
-    GameOverScreen = new GameScreen();
+    GameOverScreen = std::make_shared <GameScreen>();
     GameOverScreen->AddDrawable(Checkboard);
     GameOverScreen->AddDrawable(RestartButton);
     GameOverScreen->AddInteractive(RestartButton);

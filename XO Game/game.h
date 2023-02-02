@@ -29,13 +29,9 @@ namespace GameState
 class Game
 {
 public:
-    // game state
-    GameState::GameState    State;
-    
-    // constructor/destructor
     Game(unsigned int width, unsigned int height);
-    ~Game();
-    // initialize game state (load all shaders/textures/levels)
+    GameState::GameState State;
+    // initialize game (load all shaders/textures/levels)
     void Init();
     // game loop
     void ProcessInput();
@@ -47,24 +43,24 @@ public:
     void DoubleWindowSize();
 private:
     // Renderer objects that are responsible for drawing sprites and text
-    SpriteRenderer* Renderer;
-    TextRenderer* Text;
-    TextRenderer* BigText;
+    std::shared_ptr <SpriteRenderer> Renderer;
+    std::shared_ptr <TextRenderer> Text;
+    std::shared_ptr <TextRenderer> BigText;
 
     // Game objects
-    std::map<std::string, GameScreen*> GameScreens;
-    GameScreen* StartScreen;
-    GameScreen* GameActiveScreen;
-    GameScreen* GameOverScreen;
-    GameScreen* CurrentGameScreen;
-    GameObject* Logo;
-    CheckboardObject* Checkboard;
-    BotAI* Bot;
-    Button* StartButton;
-    Button* RestartButton;
-    TextCaption* YouVsComputerText;
-    TextCaption* CurrentCountText;
-    TextCaption* ResultText;
+    std::map<std::string, std::shared_ptr <GameScreen>> GameScreens;
+    std::shared_ptr <GameScreen> StartScreen;
+    std::shared_ptr <GameScreen> GameActiveScreen;
+    std::shared_ptr <GameScreen> GameOverScreen;
+    std::shared_ptr <GameScreen> CurrentGameScreen;
+    std::shared_ptr <GameObject> Logo;
+    std::shared_ptr <CheckboardObject> Checkboard;
+    std::shared_ptr <BotAI> Bot;
+    std::shared_ptr <Button> StartButton;
+    std::shared_ptr <Button> RestartButton;
+    std::shared_ptr <TextCaption> YouVsComputerText;
+    std::shared_ptr <TextCaption> CurrentCountText;
+    std::shared_ptr <TextCaption> ResultText;
 
     unsigned int Width, Height;
     unsigned int Victories, Defeats;

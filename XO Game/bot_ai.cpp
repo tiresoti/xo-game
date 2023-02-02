@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <chrono>
 
-BotAI::BotAI(CheckboardObject* checkboard) :  Checkboard(checkboard) { }
+BotAI::BotAI(std::shared_ptr <CheckboardObject> checkboard) :  Checkboard(checkboard) { }
 
 
 void BotAI::MakeMove()
