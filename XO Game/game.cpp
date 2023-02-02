@@ -34,7 +34,7 @@ TextCaption*      ResultText;
 
 
 Game::Game(unsigned int width, unsigned int height) 
-    : State(GAME_MENU), Width(width), Height(height),
+    : State(GameState::GAME_MENU), Width(width), Height(height),
     isMouseClicked(false), CurrentMousePos(glm::vec2(0.0f, 0.0f)),
     Victories(0), Defeats(0), FontScale(1) { }
 
@@ -159,13 +159,13 @@ void Game::Init()
 
 void Game::Update(float dt)
 {
-    if(this->State == PLAYER_MOVE || this->State == BOT_MOVE)
+    if(this->State == GameState::PLAYER_MOVE || this->State == GameState::BOT_MOVE)
         CheckBoardChanges();
 }
 
 void Game::ProcessInput()
 {
-    if (this->State == GAME_MENU)
+    if (this->State == GameState::GAME_MENU)
     {
          if (!isMouseClicked) {} // mouse is usually not clicked
          else                    // if clicked, handle input
@@ -179,12 +179,12 @@ void Game::ProcessInput()
              if (!isMouseClicked)
              {
                  StartButton->isPressed = false;
-                 SwitchToGameScreen(PLAYER_MOVE, "GameActiveScreen");
+                 SwitchToGameScreen(GameState::PLAYER_MOVE, "GameActiveScreen");
              }
          }
     }
 
-    if (this->State == PLAYER_MOVE)
+    if (this->State == GameState::PLAYER_MOVE)
     {
         if (!isMouseClicked) {}
         else
@@ -193,12 +193,12 @@ void Game::ProcessInput()
         }
     }
 
-    if (this->State == BOT_MOVE)
+    if (this->State == GameState::BOT_MOVE)
     {
         Bot->MakeMove(); // input is never handled here
     }
 
-    if (this->State == GAME_OVER)
+    if (this->State == GameState::GAME_OVER)
     {
         if (!isMouseClicked) {}
         else
@@ -229,23 +229,23 @@ void Game::CheckBoardChanges()
 {
     if (Checkboard->boardChanged())
     {
-        CellState result = Checkboard->GetWinner();
-        if (result != EMPTY)
+        CellState::CellState result = Checkboard->GetWinner();
+        if (result != CellState::EMPTY)
             FinishGameWithResult(result);
         
         //if there are no free cells, quit (change state to GAME_OVER)
-        if (!Checkboard->isEmptyCellsLeft() && this->State != GAME_OVER)
+        if (!Checkboard->isEmptyCellsLeft() && this->State != GameState::GAME_OVER)
         {
-            FinishGameWithResult(EMPTY);
+            FinishGameWithResult(CellState::EMPTY);
         }
 
         Checkboard->onBoardCheckDone();
 
         // switch player/bot state
-        if (this->State == PLAYER_MOVE)
-            this->State = BOT_MOVE;
-        else if (this->State == BOT_MOVE)
-            this->State = PLAYER_MOVE;
+        if (this->State == GameState::PLAYER_MOVE)
+            this->State = GameState::BOT_MOVE;
+        else if (this->State == GameState::BOT_MOVE)
+            this->State = GameState::PLAYER_MOVE;
     }
 }
 
@@ -253,11 +253,11 @@ void Game::CheckBoardChanges()
 void Game::RestartGame()
 {
     Checkboard->Clear();
-    SwitchToGameScreen(PLAYER_MOVE, "GameActiveScreen");
+    SwitchToGameScreen(GameState::PLAYER_MOVE, "GameActiveScreen");
 }
 
 
-void Game::SwitchToGameScreen(GameState newstate, std::string newgamescreenname)
+void Game::SwitchToGameScreen(GameState::GameState newstate, std::string newgamescreenname)
 {
     this->State = newstate;
     CurrentGameScreen->SetActiveState(false);
@@ -276,11 +276,11 @@ void Game::SwitchToGameScreen(GameState newstate, std::string newgamescreenname)
     CurrentGameScreen->SetActiveState(true);
 }
 
-void Game::FinishGameWithResult(CellState winner)
+void Game::FinishGameWithResult(CellState::CellState winner)
 {
     switch (winner)
     {
-    case PLAYER:
+    case CellState::PLAYER:
     {
         // set capture to win
         ResultText->SetCaption("YOU WIN!");
@@ -288,19 +288,19 @@ void Game::FinishGameWithResult(CellState winner)
         Victories += 1;
         break;
     }
-    case BOT:
+    case CellState::BOT:
     {
         ResultText->SetCaption("YOU LOST");
         Defeats += 1;
         break;
     }
-    case EMPTY:
+    case CellState::EMPTY:
     {
         ResultText->SetCaption("DRAW");
     }
     }
     CurrentCountText->SetCaption(std::to_string(Victories) + " : " + std::to_string(Defeats));
-    SwitchToGameScreen(GAME_OVER, "GameOverScreen");
+    SwitchToGameScreen(GameState::GAME_OVER, "GameOverScreen");
 }
 
 void Game::DoubleWindowSize()

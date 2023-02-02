@@ -16,15 +16,15 @@ public:
     std::vector<std::vector<Cell>> Cells;
     // input handling (from user or program)
     void        onMouseClick(glm::vec2 MousePosition);
-    void        ChangeCellState(Cell& cell, CellState newcellstate);
+    void        ChangeCellState(Cell& cell, CellState::CellState newcellstate);
     // game logic
     std::vector<Cell*> GetFreeCellsList();
-    bool        boardChanged();
-    void        onBoardCheckDone();
-    bool        isEmptyCellsLeft();
-    CellState   GetWinner();
-    void        Draw(SpriteRenderer& renderer);
-    void        Clear();
+    bool                   boardChanged();
+    void                   onBoardCheckDone();
+    bool                   isEmptyCellsLeft();
+    CellState::CellState   GetWinner();
+    void                   Draw(SpriteRenderer& renderer);
+    void                   Clear();
 private:
     bool        isBoardChanged;
     Texture2D*  EmptyCellSprite;

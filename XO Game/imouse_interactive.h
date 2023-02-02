@@ -6,6 +6,7 @@ class IMouseInteractive
 public:
     IMouseInteractive();
     IMouseInteractive(glm::vec2 pos, glm::vec2 size);
+    virtual ~IMouseInteractive() { }
     glm::vec2 InteractivePosition;
     glm::vec2 InteractiveSize;
     virtual void onMouseClick(glm::vec2 MousePosition);

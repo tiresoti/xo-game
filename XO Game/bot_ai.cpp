@@ -34,7 +34,7 @@ bool BotAI::isTwoCellsInARow()
             for (int j = 0; j < 3; j++)
                 if (BoardAt(i, j) == 0)
                 {
-                    Checkboard->ChangeCellState(Checkboard->Cells[i][j], BOT);
+                    Checkboard->ChangeCellState(Checkboard->Cells[i][j], CellState::BOT);
                     return true;
                 }
     }
@@ -46,7 +46,7 @@ bool BotAI::isTwoCellsInARow()
             for (int j = 0; j < 3; j++)
                 if (BoardAt(j, i) == 0)
                 {
-                    Checkboard->ChangeCellState(Checkboard->Cells[j][i], BOT);
+                    Checkboard->ChangeCellState(Checkboard->Cells[j][i], CellState::BOT);
                     return true;
                 }
     }
@@ -56,7 +56,7 @@ bool BotAI::isTwoCellsInARow()
         for (int i = 0, j = 0; j < 3; i++, j++)
             if (BoardAt(i, j) == 0)
             {
-                Checkboard->ChangeCellState(Checkboard->Cells[i][j], BOT);
+                Checkboard->ChangeCellState(Checkboard->Cells[i][j], CellState::BOT);
                 return true;
             }
 
@@ -64,17 +64,17 @@ bool BotAI::isTwoCellsInARow()
     {
         if (BoardAt(2, 0) == 0)
         {
-            Checkboard->ChangeCellState(Checkboard->Cells[2][0], BOT);
+            Checkboard->ChangeCellState(Checkboard->Cells[2][0], CellState::BOT);
             return true;
         }
         if (BoardAt(1, 1) == 0)
         {
-            Checkboard->ChangeCellState(Checkboard->Cells[1][1], BOT);
+            Checkboard->ChangeCellState(Checkboard->Cells[1][1], CellState::BOT);
             return true;
         }
         if (BoardAt(0, 2) == 0)
         {
-            Checkboard->ChangeCellState(Checkboard->Cells[0][2], BOT);
+            Checkboard->ChangeCellState(Checkboard->Cells[0][2], CellState::BOT);
             return true;
         }
     }
@@ -86,7 +86,7 @@ bool BotAI::isCentralCellFree()
 {
     if (BoardAt(1, 1) == 0)
     {
-        Checkboard->ChangeCellState(Checkboard->Cells[1][1], BOT);
+        Checkboard->ChangeCellState(Checkboard->Cells[1][1], CellState::BOT);
         return true;
     }
     return false;
@@ -122,7 +122,7 @@ bool BotAI::isClosestFilled()
     srand((unsigned)time(NULL));
     if (nearestcells.size() > 0)
     {
-        Checkboard->ChangeCellState(*nearestcells[rand() % nearestcells.size()], BOT);
+        Checkboard->ChangeCellState(*nearestcells[rand() % nearestcells.size()], CellState::BOT);
         return true;
     }
     return false;
@@ -134,5 +134,5 @@ void BotAI::FillAnyFreeCell()
     std::vector <Cell*> freecells = Checkboard->GetFreeCellsList();
     // fill a random cell from list
     srand((unsigned)time(NULL));
-    Checkboard->ChangeCellState(*freecells[rand() % freecells.size()], BOT);
+    Checkboard->ChangeCellState(*freecells[rand() % freecells.size()], CellState::BOT);
 }

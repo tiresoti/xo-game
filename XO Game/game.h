@@ -14,12 +14,15 @@
 #include <vector>
 
 // Represents the current state of the game
-enum GameState {
-    PLAYER_MOVE,
-    BOT_MOVE,
-    GAME_MENU,
-    GAME_OVER
-};
+namespace GameState
+{
+    enum GameState {
+        PLAYER_MOVE,
+        BOT_MOVE,
+        GAME_MENU,
+        GAME_OVER
+    };
+}
 
 
 // Game holds all game-related state and functionality.
@@ -27,7 +30,7 @@ class Game
 {
 public:
     // game state
-    GameState               State;
+    GameState::GameState    State;
     bool                    isMouseClicked;
     glm::vec2               CurrentMousePos;
     // constructor/destructor
@@ -50,6 +53,6 @@ private:
     unsigned int FontScale;
     void RestartGame(); // TODO: game restart
     void CheckBoardChanges();
-    void SwitchToGameScreen(GameState newstate, std::string gamescreenname);
-    void FinishGameWithResult(CellState winner);
+    void SwitchToGameScreen(GameState::GameState newstate, std::string gamescreenname);
+    void FinishGameWithResult(CellState::CellState winner);
 };

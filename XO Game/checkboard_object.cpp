@@ -1,8 +1,6 @@
 #include "checkboard_object.h"
 
 
-
-
 CheckboardObject::CheckboardObject(glm::vec2 pos, glm::vec2 size, Texture2D boardsprite,
 	Texture2D* emptycellsprite, Texture2D* xcellsprite, Texture2D* ocellsprite,
 	Texture2D* lineregularsprite, Texture2D* linediagonalsprite
@@ -37,12 +35,11 @@ void CheckboardObject::onMouseClick(glm::vec2 MousePosition)
 {
 	int column = GetBoardPart(MousePosition.x, this->Size.x, this->Position.x);
 	int row = GetBoardPart(MousePosition.y, this->Size.y, this->Position.y);
-	if (Cells[column][row].GetCellState() == EMPTY)
+	if (Cells[column][row].GetCellState() == CellState::EMPTY)
 	{
-		Cells[column][row].SetCellState(PLAYER, XCellSprite);
+		Cells[column][row].SetCellState(CellState::PLAYER, XCellSprite);
 		isBoardChanged = true;
 	}
-
 }
 
 int CheckboardObject::GetBoardPart(float screenPos, float sidelength, float startposition)
@@ -62,7 +59,7 @@ void CheckboardObject::Draw(SpriteRenderer& renderer)
 	// draw cells
 	for (std::vector<Cell>& row : this->Cells)
 		for (Cell& cell : row)
-			if(cell.GetCellState() != EMPTY)
+			if(cell.GetCellState() != CellState::EMPTY)
 			    cell.Draw(renderer);
 	if (CrossingLine.isVisible)
 		CrossingLine.Draw(renderer);
@@ -83,13 +80,13 @@ void CheckboardObject::onBoardCheckDone()
 #define BoardAt(column, row) Cells[column][row].GetCellState()
 
 // calculate if there is a 3-strike in a row and who owns it
-CellState CheckboardObject::GetWinner()
+CellState::CellState CheckboardObject::GetWinner()
 {
 	for (int i = 0; i < 3; i++)
 	{
 		// if there is a vertical strike...
 		if (BoardAt(i, 0) == BoardAt(i, 1) && BoardAt(i, 0) == BoardAt(i, 2)
-			&& BoardAt(i, 0) != EMPTY)
+			&& BoardAt(i, 0) != CellState::EMPTY)
 		{
 			// set vec2 line coordinates to (i, 0) (i, 2)
 			CrossingLine.ShowAt(glm::vec4(i, 0, i, 2));
@@ -98,7 +95,7 @@ CellState CheckboardObject::GetWinner()
 
 		// check for a horizontal one
 		if (BoardAt(0, i) == BoardAt(1, i) && BoardAt(0, i) == BoardAt(2, i)
-			&& BoardAt(0, i) != EMPTY)
+			&& BoardAt(0, i) != CellState::EMPTY)
 		{
 			// set vec2 line coordinates to (0, i) (2, i)
 			CrossingLine.ShowAt(glm::vec4(0, i, 2, i));
@@ -108,7 +105,7 @@ CellState CheckboardObject::GetWinner()
 
 	// check if there is a diagonal strike (from left upper to right lower)
 	if (BoardAt(0, 0) == BoardAt(1, 1) && BoardAt(0, 0) == BoardAt(2, 2)
-		&& BoardAt(1, 1) != EMPTY)
+		&& BoardAt(1, 1) != CellState::EMPTY)
 	{
 		// set vec2 line coordinates to (0, 0) (2, 2)
 		CrossingLine.ShowAt(glm::vec4(0, 0, 2, 2));
@@ -117,7 +114,7 @@ CellState CheckboardObject::GetWinner()
 
 	// check if there is a diagonal strike (from left lower to right upper)
 	if (BoardAt(0, 2) == BoardAt(1, 1) && BoardAt(0, 2) == BoardAt(2, 0)
-		&& BoardAt(1, 1) != EMPTY)
+		&& BoardAt(1, 1) != CellState::EMPTY)
 	{
 		// set vec2 line coordinates to (2, 0) (0, 2)
 		CrossingLine.ShowAt(glm::vec4(2, 0, 0, 2));
@@ -125,7 +122,7 @@ CellState CheckboardObject::GetWinner()
 	}
 
 	// if there are no strikes, return EMPTY
-	return EMPTY;
+	return CellState::EMPTY;
 }
 
 
@@ -133,31 +130,31 @@ bool CheckboardObject::isEmptyCellsLeft()
 {
 	for (std::vector<Cell>& row : this->Cells)
 		for (Cell& cell : row)
-			if (cell.GetCellState() == EMPTY)
+			if (cell.GetCellState() == CellState::EMPTY)
 				return true;
 	return false;
 }
 
-void CheckboardObject::ChangeCellState(Cell& cell, CellState newcellstate)
+void CheckboardObject::ChangeCellState(Cell& cell, CellState::CellState newcellstate)
 {
 	switch (newcellstate)
 	{
-	case BOT:
+	case CellState::BOT:
 		{
 		cell.SetCellState(newcellstate, OCellSprite);
 		isBoardChanged = true;
 		break;
 		}
-	case PLAYER:
+	case CellState::PLAYER:
 	{
-		cell.SetCellState(PLAYER, XCellSprite);
+		cell.SetCellState(CellState::PLAYER, XCellSprite);
 		isBoardChanged = true;
 		break;
 	}
-	case EMPTY:
+	case CellState::EMPTY:
 	{
-		// when we set state to EMPTY, we don't want the game logic to check if game is over
-		cell.SetCellState(EMPTY, EmptyCellSprite);
+		// when we set state to CellState::EMPTY, we don't want the game logic to check if game is over
+		cell.SetCellState(CellState::EMPTY, EmptyCellSprite);
 		break;
 	}
 	}
@@ -168,7 +165,7 @@ std::vector<Cell*> CheckboardObject::GetFreeCellsList()
 	std::vector<Cell*> freecells;
 	for (std::vector<Cell>& row : this->Cells)
 		for (Cell& cell : row)
-			if (cell.GetCellState() == EMPTY)
+			if (cell.GetCellState() == CellState::EMPTY)
 				freecells.push_back(&cell);
 	return freecells;
 }
@@ -177,6 +174,6 @@ void CheckboardObject::Clear()
 {
 	for (std::vector<Cell>& row : this->Cells)
 		for (Cell& cell : row)
-			ChangeCellState(cell, EMPTY);
+			ChangeCellState(cell, CellState::EMPTY);
 	CrossingLine.isVisible = false;
 }
