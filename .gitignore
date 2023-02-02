@@ -1,6 +1,6 @@
 # ignored directories
 .vs/
-Build
+Build/
 x64/
 XO Game/x64/
 XO Game/res/textures/temp
