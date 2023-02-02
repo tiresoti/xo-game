@@ -12,26 +12,6 @@
 // A little delay between frame to avoid CPU overloading
 #define SLEEP std::this_thread::sleep_for(std::chrono::milliseconds(5))
 
-// Renderer objects that is responsible for drawing sprites and text
-SpriteRenderer*   Renderer;
-TextRenderer*     Text;
-TextRenderer*     BigText;
-
-// Game objects
-std::map<std::string, GameScreen*> GameScreens;
-GameScreen*       StartScreen;
-GameScreen*       GameActiveScreen;
-GameScreen*       GameOverScreen;
-GameScreen*       CurrentGameScreen;
-GameObject*       Logo;
-CheckboardObject* Checkboard;
-BotAI*            Bot;
-Button*           StartButton;
-Button*           RestartButton;
-TextCaption*      YouVsComputerText;
-TextCaption*      CurrentCountText;
-TextCaption*      ResultText;
-
 
 Game::Game(unsigned int width, unsigned int height) 
     : State(GameState::GAME_MENU), Width(width), Height(height),

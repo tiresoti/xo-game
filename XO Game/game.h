@@ -31,8 +31,7 @@ class Game
 public:
     // game state
     GameState::GameState    State;
-    bool                    isMouseClicked;
-    glm::vec2               CurrentMousePos;
+    
     // constructor/destructor
     Game(unsigned int width, unsigned int height);
     ~Game();
@@ -43,15 +42,39 @@ public:
     void Update(float dt);
     void Render();
     // window size doubling option - only call before Init() to avoid cropping
+    void SetMouseClicked(bool newstate) { isMouseClicked = newstate; }
+    void SetMousePos(glm::vec2&& newposition) { CurrentMousePos = newposition; }
     void DoubleWindowSize();
 private:
-    // initial size of the window
+    // Renderer objects that are responsible for drawing sprites and text
+    SpriteRenderer* Renderer;
+    TextRenderer* Text;
+    TextRenderer* BigText;
+
+    // Game objects
+    std::map<std::string, GameScreen*> GameScreens;
+    GameScreen* StartScreen;
+    GameScreen* GameActiveScreen;
+    GameScreen* GameOverScreen;
+    GameScreen* CurrentGameScreen;
+    GameObject* Logo;
+    CheckboardObject* Checkboard;
+    BotAI* Bot;
+    Button* StartButton;
+    Button* RestartButton;
+    TextCaption* YouVsComputerText;
+    TextCaption* CurrentCountText;
+    TextCaption* ResultText;
+
     unsigned int Width, Height;
-    // win/lose count
     unsigned int Victories, Defeats;
-    // font scale
     unsigned int FontScale;
-    void RestartGame(); // TODO: game restart
+
+    // mouse stuff
+    glm::vec2 CurrentMousePos;
+    bool isMouseClicked;
+
+    void RestartGame();
     void CheckBoardChanges();
     void SwitchToGameScreen(GameState::GameState newstate, std::string gamescreenname);
     void FinishGameWithResult(CellState::CellState winner);

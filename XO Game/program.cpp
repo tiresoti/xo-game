@@ -128,12 +128,12 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
         double xpos, ypos;
         //getting cursor position
         glfwGetCursorPos(window, &xpos, &ypos);
-        XO.isMouseClicked = true;
-        XO.CurrentMousePos = glm::vec2(xpos, ypos);
+        XO.SetMouseClicked(true);
+        XO.SetMousePos(glm::vec2(xpos, ypos));
     }
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
     {
-        XO.isMouseClicked = false;
+        XO.SetMouseClicked(false);
     }
 }
 
